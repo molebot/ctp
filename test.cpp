@@ -69,7 +69,6 @@ public:
 
 };
 
-
 int main()
 {
 	SetConsoleTitle(_T("CTP½»Ò×ÖÕ¶Ë [qq:129769]"));
