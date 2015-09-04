@@ -49,7 +49,7 @@ public:
 		std::cout << accountNum << std::endl;
 		std::cout << "===获取密码===" << std::endl;
 		accountPwd = msg("accountpwd");
-		std::cout << accountPwd << std::endl;
+		std::cout << "ok!" << std::endl;
 		std::cout << "===设定合约===" << std::endl;
 		symbol = msg("symbol");
 		std::cout << symbol << std::endl;
@@ -72,7 +72,7 @@ public:
 
 int main()
 {
-
+	SetConsoleTitle(_T("CTP交易终端 [qq:129769]"));
 
 
 	Carbon *pC = new Carbon();
