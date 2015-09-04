@@ -24,9 +24,7 @@ public:
 	Carbon(std::string _Server) {
 		m_context	= zmq_ctx_new();
 		m_socket	= zmq_socket(m_context, ZMQ_REQ);
-
-		std::string address = _Server;
-		zmq_connect(m_socket,address.c_str());
+		zmq_connect(m_socket, _Server.c_str());
 		requestID = 0;
 		init();
 	}
@@ -80,7 +78,7 @@ int main(int argc,const char* argv[])
 {
 	SetConsoleTitle(_T("CTP交易终端 [qq:129769]"));
 	if ( argc > 1) {
-		std::cout << ">>>连接自定义服务器: " <<argv[1] << std::endl;
+		std::cout << ">>>连接自定义服务器: " << argv[1] << std::endl;
 		pC = new Carbon(argv[1]);
 	}
 	else{
