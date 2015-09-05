@@ -338,14 +338,6 @@ void TD::ReqOrderInsert() {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 };
 
-void TD::ReqOrderAction(CThostFtdcRspInfoField *pRspInfo) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-};
-
-void TD::ReqOrderAction(CThostFtdcRspInfoField *pRspInfo) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-};
-
 void TD::ReqQryOrder() {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 };
