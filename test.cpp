@@ -299,7 +299,11 @@ public:
 		pmds = new MD();
 		pmda->RegisterSpi(pmds);
 		pmda->RegisterFront(md_buf);
-
+		//  Æô¶¯³õÊ¼»¯
+		ptda->Init();
+		std::cout << "ptda->init()" << std::endl;
+		ptda->Join();
+		std::cout << "ptda->join()" << std::endl;
 		return 0;
 	}
 
@@ -345,10 +349,6 @@ int main(int argc,const char* argv[])
 	}
 
 
-	std::cout << pC->getID() << std::endl;
-	std::cout << pC->getID() << std::endl;
-	std::cout << pC->error(0) << std::endl;
-	std::cout << pC->log("ok") << std::endl;
 	system("pause");
     return 0;
 }
