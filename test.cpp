@@ -254,7 +254,7 @@ public:
 	bool isErrorRspInfo(CThostFtdcRspInfoField *pRspInfo){
 		bool ret = ((pRspInfo) && (pRspInfo->ErrorID != 0));
 		if (ret){
-			std::cout << "!!! Error: " <<	error(pRspInfo->ErrorID) << std::endl;
+			std::cout << "!!! CTP报错 [ " << error(pRspInfo->ErrorID) << " ] !!!" << std::endl;
 		}
 		return ret;
 	}
