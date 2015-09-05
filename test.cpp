@@ -20,8 +20,11 @@ class MD : public CThostFtdcMdSpi
 public:
 
 	///错误应答
-	virtual void OnRspError(CThostFtdcRspInfoField *pRspInfo,
-		int nRequestID, bool bIsLast);
+	void OnRspError(CThostFtdcRspInfoField *pRspInfo,
+		int nRequestID, bool bIsLast) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		IsErrorRspInfo(pRspInfo);
+	}
 
 	///当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
 	///@param nReason 错误原因
@@ -30,37 +33,58 @@ public:
 	///        0x2001 接收心跳超时
 	///        0x2002 发送心跳失败
 	///        0x2003 收到错误报文
-	virtual void OnFrontDisconnected(int nReason);
+	void OnFrontDisconnected(int nReason) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///心跳超时警告。当长时间未收到报文时，该方法被调用。
 	///@param nTimeLapse 距离上次接收报文的时间
-	virtual void OnHeartBeatWarning(int nTimeLapse);
+	void OnHeartBeatWarning(int nTimeLapse) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///当客户端与交易后台建立起通信连接时（还未登录前），该方法被调用。
-	virtual void OnFrontConnected();
+	void OnFrontConnected() {
+	std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///登录请求响应
-	virtual void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///订阅行情应答
-	virtual void OnRspSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	void OnRspSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///取消订阅行情应答
-	virtual void OnRspUnSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	void OnRspUnSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///深度行情通知
-	virtual void OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData);
+	void OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 
 
 public:
 
 	///	用户登录
-	void	ReqUserLogin();
+	void	ReqUserLogin() {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 	///	订阅合约
-	void	SubscribeMarketData();
+	void	SubscribeMarketData() {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 	///	读取错误信息
-	bool	IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo);
+	bool	IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		return true;
+	}
 
 };
 
@@ -69,86 +93,141 @@ class TD : public CThostFtdcTraderSpi
 public:
 
 	///当客户端与交易后台建立起通信连接时（还未登录前），该方法被调用。
-	virtual void OnFrontConnected();
+	void OnFrontConnected() {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///登录请求响应
-	virtual void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///投资者结算结果确认响应
-	virtual void OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	void OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///请求查询合约响应
-	virtual void OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	void OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///请求查询资金账户响应
-	virtual void OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAccount, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	void OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAccount, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///请求查询投资者持仓响应
-	virtual void OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvestorPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	void OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvestorPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///报单录入请求响应
-	virtual void OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	void OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///报单操作请求响应
-	virtual void OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	void OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///错误应答
-	virtual void OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	void OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
-	virtual void OnFrontDisconnected(int nReason);
+	void OnFrontDisconnected(int nReason) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///心跳超时警告。当长时间未收到报文时，该方法被调用。
-	virtual void OnHeartBeatWarning(int nTimeLapse);
+	void OnHeartBeatWarning(int nTimeLapse) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///报单通知
-	virtual void OnRtnOrder(CThostFtdcOrderField *pOrder);
+	void OnRtnOrder(CThostFtdcOrderField *pOrder) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///成交通知
-	virtual void OnRtnTrade(CThostFtdcTradeField *pTrade);
+	void OnRtnTrade(CThostFtdcTradeField *pTrade) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///请求查询报单响应
-	virtual void OnRspQryOrder(CThostFtdcOrderField *pOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	void OnRspQryOrder(CThostFtdcOrderField *pOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///请求查询成交响应
-	virtual void OnRspQryTrade(CThostFtdcTradeField *pTrade, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	void OnRspQryTrade(CThostFtdcTradeField *pTrade, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///请求查询投资者持仓明细响应
-	virtual void OnRspQryInvestorPositionDetail(CThostFtdcInvestorPositionDetailField *pInvestorPositionDetail, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	void OnRspQryInvestorPositionDetail(CThostFtdcInvestorPositionDetailField *pInvestorPositionDetail, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 public:
 	///用户登录请求
-	void ReqUserLogin();
+	void ReqUserLogin() {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///投资者结算结果确认
-	void ReqSettlementInfoConfirm();
+	void ReqSettlementInfoConfirm() {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///请求查询合约
-	void ReqQryInstrument();
+	void ReqQryInstrument() {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///请求查询资金账户
-	void ReqQryTradingAccount();
+	void ReqQryTradingAccount() {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///请求查询投资者持仓
-	void ReqQryInvestorPosition();
+	void ReqQryInvestorPosition() {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///报单录入请求
-	void ReqOrderInsert();
+	void ReqOrderInsert() {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///报单操作请求
-	void ReqOrderAction(CThostFtdcRspInfoField *pRspInfo);
+	void ReqOrderAction(CThostFtdcRspInfoField *pRspInfo) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	////错误响应
-	bool IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo);
+	bool IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo) {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		return true;
+	}
 
 	///报单查询请求
-	void ReqQryOrder();
+	void ReqQryOrder() {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	///成交查询请求
-	void ReqQryTrade();
+	void ReqQryTrade() {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 	//请求查询投资者持仓明细
-	void ReqQryInvestorPositionDetail();
+	void ReqQryInvestorPositionDetail() {
+		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	}
 
 };
 
@@ -158,6 +237,10 @@ private:
 	int				requestID;
 	void			*m_socket;
 	void			*m_context;
+	void			*pmds;
+	void			*ptds;
+	void			*pmda;
+	void			*ptda;
 	std::string		md_front,td_front;
 	std::string		brokerid;
 	std::string		accountNum;
@@ -199,6 +282,11 @@ public:
 		symbol = msg("this_symbol");
 		std::cout << "===设定合约===" << std::endl;
 		std::cout << symbol << std::endl;
+
+		ptda = CThostFtdcTraderApi::CreateFtdcTraderApi(".\\tdflow\\");
+		ptds = new TD();
+		pmda = CThostFtdcMdApi::CreateFtdcMdApi(".\\mdflow\\");
+		pmds = new MD();
 		return 0;
 	}
 
@@ -229,7 +317,7 @@ public:
 
 };
 
-Carbon* pC;
+Carbon*					pC;
 
 int main(int argc,const char* argv[])
 {
