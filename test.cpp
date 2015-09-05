@@ -22,7 +22,7 @@ public:
 	///错误应答
 	void OnRspError(CThostFtdcRspInfoField *pRspInfo,
 		int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 		IsErrorRspInfo(pRspInfo);
 	}
 
@@ -34,38 +34,38 @@ public:
 	///        0x2002 发送心跳失败
 	///        0x2003 收到错误报文
 	void OnFrontDisconnected(int nReason) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///心跳超时警告。当长时间未收到报文时，该方法被调用。
 	///@param nTimeLapse 距离上次接收报文的时间
 	void OnHeartBeatWarning(int nTimeLapse) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///当客户端与交易后台建立起通信连接时（还未登录前），该方法被调用。
 	void OnFrontConnected() {
-	std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///登录请求响应
 	void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///订阅行情应答
 	void OnRspSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///取消订阅行情应答
 	void OnRspUnSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///深度行情通知
 	void OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 
@@ -74,15 +74,15 @@ public:
 
 	///	用户登录
 	void	ReqUserLogin() {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 	///	订阅合约
 	void	SubscribeMarketData() {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 	///	读取错误信息
 	bool	IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 		return true;
 	}
 
@@ -94,139 +94,139 @@ public:
 
 	///当客户端与交易后台建立起通信连接时（还未登录前），该方法被调用。
 	void OnFrontConnected() {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///登录请求响应
 	void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///投资者结算结果确认响应
 	void OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///请求查询合约响应
 	void OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///请求查询资金账户响应
 	void OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAccount, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///请求查询投资者持仓响应
 	void OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvestorPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///报单录入请求响应
 	void OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///报单操作请求响应
 	void OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///错误应答
 	void OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
 	void OnFrontDisconnected(int nReason) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///心跳超时警告。当长时间未收到报文时，该方法被调用。
 	void OnHeartBeatWarning(int nTimeLapse) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///报单通知
 	void OnRtnOrder(CThostFtdcOrderField *pOrder) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///成交通知
 	void OnRtnTrade(CThostFtdcTradeField *pTrade) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///请求查询报单响应
 	void OnRspQryOrder(CThostFtdcOrderField *pOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///请求查询成交响应
 	void OnRspQryTrade(CThostFtdcTradeField *pTrade, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///请求查询投资者持仓明细响应
 	void OnRspQryInvestorPositionDetail(CThostFtdcInvestorPositionDetailField *pInvestorPositionDetail, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 public:
 	///用户登录请求
 	void ReqUserLogin() {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///投资者结算结果确认
 	void ReqSettlementInfoConfirm() {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///请求查询合约
 	void ReqQryInstrument() {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///请求查询资金账户
 	void ReqQryTradingAccount() {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///请求查询投资者持仓
 	void ReqQryInvestorPosition() {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///报单录入请求
 	void ReqOrderInsert() {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///报单操作请求
 	void ReqOrderAction(CThostFtdcRspInfoField *pRspInfo) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	////错误响应
 	bool IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo) {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 		return true;
 	}
 
 	///报单查询请求
 	void ReqQryOrder() {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	///成交查询请求
 	void ReqQryTrade() {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 	//请求查询投资者持仓明细
 	void ReqQryInvestorPositionDetail() {
-		std::cout << "===#" << __FUNCTION__ << "#==" << std::endl;
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	}
 
 };
