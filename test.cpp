@@ -260,7 +260,12 @@ public:
 		return _msg.body();
 	}
 
-
+	void isErrorRspInfo(CThostFtdcRspInfoField *pRspInfo){
+		bool ret = ((pRspInfo) && (pRspInfo->ErrorID != 0));
+		if (ret){
+			std::cout << "!!! Error: " <<	error(pRspInfo->ErrorID) << std::endl;
+		}
+	}
 };
 //===========================================================================================================================
 
@@ -268,11 +273,6 @@ Carbon*	pC;
 
 //===========================================================================================================================
 // for MD Spi
-bool MD::IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	return true;
-};
-
 void MD::SubscribeMarketData() {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 };
@@ -288,7 +288,7 @@ void MD::log(std::string s) {
 
 void MD::OnRspError(CThostFtdcRspInfoField *pRspInfo,int nRequestID, bool bIsLast) {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	IsErrorRspInfo(pRspInfo);
+	pC->isErrorRspInfo(pRspInfo);
 };
 
 void MD::OnFrontDisconnected(int nReason) {
@@ -353,11 +353,6 @@ void TD::ReqOrderAction(CThostFtdcRspInfoField *pRspInfo) {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 };
 
-bool TD::IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	return true;
-};
-
 void TD::ReqQryOrder() {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 };
@@ -409,6 +404,7 @@ void TD::OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CT
 
 void TD::OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+	pC->isErrorRspInfo(pRspInfo);
 };
 
 void TD::OnRspQryOrder(CThostFtdcOrderField *pOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
