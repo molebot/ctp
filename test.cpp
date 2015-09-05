@@ -20,7 +20,6 @@ private:
 public:
 	MD(Carbon* _pC):pC(_pC) {}
 
-	void log(std::string s);
 	///错误应答
 	void OnRspError(CThostFtdcRspInfoField *pRspInfo,int nRequestID, bool bIsLast);
 
@@ -66,8 +65,7 @@ private:
 	Carbon *pC;
 public:
 	TD(Carbon* _pC) :pC(_pC) {}
-
-	void log(std::string s);
+	
 	///当客户端与交易后台建立起通信连接时（还未登录前），该方法被调用。
 
 	void OnFrontConnected();
@@ -253,11 +251,12 @@ public:
 		return _msg.body();
 	}
 
-	void isErrorRspInfo(CThostFtdcRspInfoField *pRspInfo){
+	bool isErrorRspInfo(CThostFtdcRspInfoField *pRspInfo){
 		bool ret = ((pRspInfo) && (pRspInfo->ErrorID != 0));
 		if (ret){
 			std::cout << "!!! Error: " <<	error(pRspInfo->ErrorID) << std::endl;
 		}
+		return ret;
 	}
 };
 //===========================================================================================================================
@@ -272,11 +271,6 @@ void MD::SubscribeMarketData() {
 
 void MD::ReqUserLogin() {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-};
-
-void MD::log(std::string s) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	pC->log(s);
 };
 
 void MD::OnRspError(CThostFtdcRspInfoField *pRspInfo,int nRequestID, bool bIsLast) {
@@ -348,11 +342,6 @@ void TD::ReqQryTrade() {
 
 void TD::ReqQryInvestorPositionDetail() {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-};
-
-void TD::log(std::string s) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	pC->log(s);
 };
 
 void TD::OnFrontConnected() {
