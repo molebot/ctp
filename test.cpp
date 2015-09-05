@@ -136,7 +136,7 @@ public:
 	void ReqOrderInsert();
 
 	///报单操作请求
-	void ReqOrderAction(CThostFtdcRspInfoField *pRspInfo);
+	void ReqOrderAction();
 
 	///报单查询请求
 	void ReqQryOrder();
