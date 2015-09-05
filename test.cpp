@@ -21,13 +21,10 @@ private:
 	Carbon *pC;
 public:
 	MD(Carbon* _pC):pC(_pC) {}
+
 	void log(std::string s);
 	///错误应答
-	void OnRspError(CThostFtdcRspInfoField *pRspInfo,
-		int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-		IsErrorRspInfo(pRspInfo);
-	}
+	void OnRspError(CThostFtdcRspInfoField *pRspInfo,int nRequestID, bool bIsLast);
 
 	///当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
 	///@param nReason 错误原因
@@ -36,58 +33,35 @@ public:
 	///        0x2001 接收心跳超时
 	///        0x2002 发送心跳失败
 	///        0x2003 收到错误报文
-	void OnFrontDisconnected(int nReason) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void OnFrontDisconnected(int nReason);
 
 	///心跳超时警告。当长时间未收到报文时，该方法被调用。
 	///@param nTimeLapse 距离上次接收报文的时间
-	void OnHeartBeatWarning(int nTimeLapse) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void OnHeartBeatWarning(int nTimeLapse);
 
 	///当客户端与交易后台建立起通信连接时（还未登录前），该方法被调用。
-	void OnFrontConnected() {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void OnFrontConnected();
 
 	///登录请求响应
-	void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	///订阅行情应答
-	void OnRspSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void OnRspSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	///取消订阅行情应答
-	void OnRspUnSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void OnRspUnSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	///深度行情通知
-	void OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
-
-
-
-public:
+	void OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData);
 
 	///	用户登录
-	void	ReqUserLogin() {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void	ReqUserLogin();
+
 	///	订阅合约
-	void	SubscribeMarketData() {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void	SubscribeMarketData();
+
 	///	读取错误信息
-	bool	IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-		return true;
-	}
+	bool	IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo);
 
 };
 
@@ -97,143 +71,90 @@ private:
 	Carbon *pC;
 public:
 	TD(Carbon* _pC) :pC(_pC) {}
+
 	void log(std::string s);
 	///当客户端与交易后台建立起通信连接时（还未登录前），该方法被调用。
-	void OnFrontConnected() {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+
+	void OnFrontConnected();
 
 	///登录请求响应
-	void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	///投资者结算结果确认响应
-	void OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	///请求查询合约响应
-	void OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	///请求查询资金账户响应
-	void OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAccount, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAccount, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	///请求查询投资者持仓响应
-	void OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvestorPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvestorPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	///报单录入请求响应
-	void OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	///报单操作请求响应
-	void OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	///错误应答
-	void OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	///当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
-	void OnFrontDisconnected(int nReason) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void OnFrontDisconnected(int nReason);
 
 	///心跳超时警告。当长时间未收到报文时，该方法被调用。
-	void OnHeartBeatWarning(int nTimeLapse) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void OnHeartBeatWarning(int nTimeLapse);
 
 	///报单通知
-	void OnRtnOrder(CThostFtdcOrderField *pOrder) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void OnRtnOrder(CThostFtdcOrderField *pOrder);
 
 	///成交通知
-	void OnRtnTrade(CThostFtdcTradeField *pTrade) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void OnRtnTrade(CThostFtdcTradeField *pTrade);
 
 	///请求查询报单响应
-	void OnRspQryOrder(CThostFtdcOrderField *pOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void OnRspQryOrder(CThostFtdcOrderField *pOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	///请求查询成交响应
-	void OnRspQryTrade(CThostFtdcTradeField *pTrade, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void OnRspQryTrade(CThostFtdcTradeField *pTrade, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	///请求查询投资者持仓明细响应
-	void OnRspQryInvestorPositionDetail(CThostFtdcInvestorPositionDetailField *pInvestorPositionDetail, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void OnRspQryInvestorPositionDetail(CThostFtdcInvestorPositionDetailField *pInvestorPositionDetail, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
-public:
 	///用户登录请求
-	void ReqUserLogin() {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void ReqUserLogin();
+
 
 	///投资者结算结果确认
-	void ReqSettlementInfoConfirm() {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void ReqSettlementInfoConfirm();
 
 	///请求查询合约
-	void ReqQryInstrument() {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void ReqQryInstrument();
 
 	///请求查询资金账户
-	void ReqQryTradingAccount() {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void ReqQryTradingAccount();
 
 	///请求查询投资者持仓
-	void ReqQryInvestorPosition() {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void ReqQryInvestorPosition();
 
 	///报单录入请求
-	void ReqOrderInsert() {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void ReqOrderInsert();
 
 	///报单操作请求
-	void ReqOrderAction(CThostFtdcRspInfoField *pRspInfo) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void ReqOrderAction(CThostFtdcRspInfoField *pRspInfo);
 
 	////错误响应
-	bool IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo) {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-		return true;
-	}
+	bool IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo);
 
 	///报单查询请求
-	void ReqQryOrder() {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void ReqQryOrder();
 
 	///成交查询请求
-	void ReqQryTrade() {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void ReqQryTrade();
 
 	//请求查询投资者持仓明细
-	void ReqQryInvestorPositionDetail() {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	}
+	void ReqQryInvestorPositionDetail();
 
 };
 
@@ -339,17 +260,185 @@ public:
 
 
 };
+//===========================================================================================================================
 
 Carbon*	pC;
+// for MD Spi
+bool MD::IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+	return true;
+};
+
+void MD::SubscribeMarketData() {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void MD::ReqUserLogin() {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
 void MD::log(std::string s) {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	pC->log(s);
 };
+
+void MD::OnRspError(CThostFtdcRspInfoField *pRspInfo,int nRequestID, bool bIsLast) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+	IsErrorRspInfo(pRspInfo);
+};
+
+void MD::OnFrontDisconnected(int nReason) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void MD::OnHeartBeatWarning(int nTimeLapse) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void MD::OnFrontConnected() {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void MD::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void MD::OnRspSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void MD::OnRspUnSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void MD::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+//===========================================================================================================================
+// for TD Spi
+void TD::ReqUserLogin() {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::ReqSettlementInfoConfirm() {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::ReqQryInstrument() {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::ReqQryTradingAccount() {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::ReqQryInvestorPosition() {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::ReqOrderInsert() {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::ReqOrderAction(CThostFtdcRspInfoField *pRspInfo) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::ReqOrderAction(CThostFtdcRspInfoField *pRspInfo) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+bool TD::IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+	return true;
+};
+
+void TD::ReqQryOrder() {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::ReqQryTrade() {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::ReqQryInvestorPositionDetail() {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
 void TD::log(std::string s) {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	pC->log(s);
 };
 
+void TD::OnFrontConnected() {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAccount, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvestorPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::OnRspQryOrder(CThostFtdcOrderField *pOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::OnFrontDisconnected(int nReason) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::OnHeartBeatWarning(int nTimeLapse) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::OnRtnOrder(CThostFtdcOrderField *pOrder) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::OnRtnTrade(CThostFtdcTradeField *pTrade) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::OnRspQryTrade(CThostFtdcTradeField *pTrade, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+void TD::OnRspQryInvestorPositionDetail(CThostFtdcInvestorPositionDetailField *pInvestorPositionDetail, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+
+
+
+
+//===========================================================================================================================
 int main(int argc,const char* argv[])
 {
 	SetConsoleTitle(_T("CTP交易终端 [qq:129769]"));
