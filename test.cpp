@@ -325,10 +325,10 @@ public:
 	}
 
 	std::string msg(std::string s) {
-		zmsg msg(s.c_str());
-		msg.send((zmq::socket_t &)m_socket);
-		msg.recv((zmq::socket_t &)m_socket);
-		return msg.body();
+		zmsg _msg(s.c_str());
+		_msg.send((zmq::socket_t &)m_socket);
+		_msg.recv((zmq::socket_t &)m_socket);
+		return _msg.body();
 	}
 
 
