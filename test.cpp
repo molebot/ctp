@@ -237,10 +237,10 @@ private:
 	int				requestID;
 	void			*m_socket;
 	void			*m_context;
-	void			*pmds;
-	void			*ptds;
-	void			*pmda;
-	void			*ptda;
+	MD				*pmds;
+	TD				*ptds;
+	CThostFtdcMdApi	*pmda;
+	CThostFtdcTraderApi		*ptda;
 	std::string		md_front,td_front;
 	std::string		brokerid;
 	std::string		accountNum;
@@ -283,10 +283,23 @@ public:
 		std::cout << "===设定合约===" << std::endl;
 		std::cout << symbol << std::endl;
 
+		char *md_buf = new char[strlen(md_front.c_str()) + 1];
+		strcpy(md_buf, md_front.c_str());
+
+		char *td_buf = new char[strlen(td_front.c_str()) + 1];
+		strcpy(td_buf, td_front.c_str());
+
 		ptda = CThostFtdcTraderApi::CreateFtdcTraderApi(".\\tdflow\\");
 		ptds = new TD();
+		ptda->RegisterSpi((CThostFtdcTraderSpi*)ptds);
+		ptda->SubscribePublicTopic(THOST_TERT_QUICK);
+		ptda->SubscribePrivateTopic(THOST_TERT_QUICK);
+		ptda->RegisterFront(td_buf);
 		pmda = CThostFtdcMdApi::CreateFtdcMdApi(".\\mdflow\\");
 		pmds = new MD();
+		pmda->RegisterSpi(pmds);
+		pmda->RegisterFront(md_buf);
+
 		return 0;
 	}
 
