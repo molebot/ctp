@@ -12,13 +12,16 @@
 #include "ThostFtdcTraderApi.h"
 
 std::string CoreServer = "tcp://192.168.1.234:5555";
-
 using std::string;
+class Carbon;
 
 class MD : public CThostFtdcMdSpi
 {
+private:
+	Carbon *pC;
 public:
-
+	MD(Carbon* _pC):pC(_pC) {}
+	void log(std::string s);
 	///错误应答
 	void OnRspError(CThostFtdcRspInfoField *pRspInfo,
 		int nRequestID, bool bIsLast) {
@@ -90,8 +93,11 @@ public:
 
 class TD : public CThostFtdcTraderSpi
 {
+private:
+	Carbon *pC;
 public:
-
+	TD(Carbon* _pC) :pC(_pC) {}
+	void log(std::string s);
 	///当客户端与交易后台建立起通信连接时（还未登录前），该方法被调用。
 	void OnFrontConnected() {
 		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
@@ -290,13 +296,13 @@ public:
 		strcpy(td_buf, td_front.c_str());
 
 		ptda = CThostFtdcTraderApi::CreateFtdcTraderApi(".\\tdflow\\");
-		ptds = new TD();
+		ptds = new TD(this);
 		ptda->RegisterSpi((CThostFtdcTraderSpi*)ptds);
 		ptda->SubscribePublicTopic(THOST_TERT_QUICK);
 		ptda->SubscribePrivateTopic(THOST_TERT_QUICK);
 		ptda->RegisterFront(td_buf);
 		pmda = CThostFtdcMdApi::CreateFtdcMdApi(".\\mdflow\\");
-		pmds = new MD();
+		pmds = new MD(this);
 		pmda->RegisterSpi(pmds);
 		pmda->RegisterFront(md_buf);
 		//  启动初始化
@@ -334,7 +340,13 @@ public:
 
 };
 
-Carbon*					pC;
+Carbon*	pC;
+void MD::log(std::string s) {
+	pC->log(s);
+};
+void TD::log(std::string s) {
+	pC->log(s);
+};
 
 int main(int argc,const char* argv[])
 {
