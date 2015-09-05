@@ -8,7 +8,15 @@
 #include <map>
 #include "ThostFtdcMdApi.h"
 #include "ThostFtdcTraderApi.h"
+// typedef 
+typedef TThostFtdcBrokerIDType		BrokerID;
+typedef TThostFtdcUserIDType		UserID;
+typedef TThostFtdcPasswordType		UserPassword;
+typedef	TThostFtdcSessionIDType		SessionID;
+typedef TThostFtdcFrontIDType		FrontID;
+typedef	TThostFtdcOrderRefType		OrderRef;
 
+// end typedef
 std::string CoreServer = "tcp://192.168.1.234:5555";
 using std::string;
 class Carbon;
@@ -219,11 +227,10 @@ public:
 		pmda->RegisterFront(md_buf);
 		
 		//  启动初始化
-		ptda->Init();
+		ptda->Init();	//	触发TD::OnFrontConnected，启动初始化链条
+		//初始化链条完毕后pmda->init()；然后一起join
 		std::cout << "ptda->init()" << std::endl;
-		ptda->Join();
-		std::cout << "ptda->join()" << std::endl;
-		
+
 		return 0;
 	}
 
