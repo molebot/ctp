@@ -342,9 +342,11 @@ public:
 
 Carbon*	pC;
 void MD::log(std::string s) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	pC->log(s);
 };
 void TD::log(std::string s) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	pC->log(s);
 };
 
