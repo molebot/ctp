@@ -1,4 +1,4 @@
-中期ctp通过zmq外部服务器
+中期ctp通过zmq连外部服务器
 
 需要用到的lib:
 libzmq
@@ -9,10 +9,6 @@ CThostFtdcTraderApi
 ctp账户信息通过zmq从外部服务器获取(详见Carbon::init函数)
 
 author:
-molebot
+molebot@qq.com
 
-weixin:
-molebot
-
-email:
-molebot@molebot.com
+ENJOY IT
