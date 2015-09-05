@@ -1,6 +1,4 @@
-// test.cpp : ¶¨Òå¿ØÖÆÌ¨Ó¦ÓÃ³ÌĞòµÄÈë¿Úµã¡£
-//
-
+// ctp over zmq  by: molebot email: molebot@qq.com
 #include "stdafx.h"
 #include <iostream>
 #include <sstream>
@@ -23,44 +21,44 @@ public:
 	MD(Carbon* _pC):pC(_pC) {}
 
 	void log(std::string s);
-	///´íÎóÓ¦´ğ
+	///é”™è¯¯åº”ç­”
 	void OnRspError(CThostFtdcRspInfoField *pRspInfo,int nRequestID, bool bIsLast);
 
-	///µ±¿Í»§¶ËÓë½»Ò×ºóÌ¨Í¨ĞÅÁ¬½Ó¶Ï¿ªÊ±£¬¸Ã·½·¨±»µ÷ÓÃ¡£µ±·¢ÉúÕâ¸öÇé¿öºó£¬API»á×Ô¶¯ÖØĞÂÁ¬½Ó£¬¿Í»§¶Ë¿É²»×ö´¦Àí¡£
-	///@param nReason ´íÎóÔ­Òò
-	///        0x1001 ÍøÂç¶ÁÊ§°Ü
-	///        0x1002 ÍøÂçĞ´Ê§°Ü
-	///        0x2001 ½ÓÊÕĞÄÌø³¬Ê±
-	///        0x2002 ·¢ËÍĞÄÌøÊ§°Ü
-	///        0x2003 ÊÕµ½´íÎó±¨ÎÄ
+	///å½“å®¢æˆ·ç«¯ä¸äº¤æ˜“åå°é€šä¿¡è¿æ¥æ–­å¼€æ—¶ï¼Œè¯¥æ–¹æ³•è¢«è°ƒç”¨ã€‚å½“å‘ç”Ÿè¿™ä¸ªæƒ…å†µåï¼ŒAPIä¼šè‡ªåŠ¨é‡æ–°è¿æ¥ï¼Œå®¢æˆ·ç«¯å¯ä¸åšå¤„ç†ã€‚
+	///@param nReason é”™è¯¯åŸå› 
+	///        0x1001 ç½‘ç»œè¯»å¤±è´¥
+	///        0x1002 ç½‘ç»œå†™å¤±è´¥
+	///        0x2001 æ¥æ”¶å¿ƒè·³è¶…æ—¶
+	///        0x2002 å‘é€å¿ƒè·³å¤±è´¥
+	///        0x2003 æ”¶åˆ°é”™è¯¯æŠ¥æ–‡
 	void OnFrontDisconnected(int nReason);
 
-	///ĞÄÌø³¬Ê±¾¯¸æ¡£µ±³¤Ê±¼äÎ´ÊÕµ½±¨ÎÄÊ±£¬¸Ã·½·¨±»µ÷ÓÃ¡£
-	///@param nTimeLapse ¾àÀëÉÏ´Î½ÓÊÕ±¨ÎÄµÄÊ±¼ä
+	///å¿ƒè·³è¶…æ—¶è­¦å‘Šã€‚å½“é•¿æ—¶é—´æœªæ”¶åˆ°æŠ¥æ–‡æ—¶ï¼Œè¯¥æ–¹æ³•è¢«è°ƒç”¨ã€‚
+	///@param nTimeLapse è·ç¦»ä¸Šæ¬¡æ¥æ”¶æŠ¥æ–‡çš„æ—¶é—´
 	void OnHeartBeatWarning(int nTimeLapse);
 
-	///µ±¿Í»§¶ËÓë½»Ò×ºóÌ¨½¨Á¢ÆğÍ¨ĞÅÁ¬½ÓÊ±£¨»¹Î´µÇÂ¼Ç°£©£¬¸Ã·½·¨±»µ÷ÓÃ¡£
+	///å½“å®¢æˆ·ç«¯ä¸äº¤æ˜“åå°å»ºç«‹èµ·é€šä¿¡è¿æ¥æ—¶ï¼ˆè¿˜æœªç™»å½•å‰ï¼‰ï¼Œè¯¥æ–¹æ³•è¢«è°ƒç”¨ã€‚
 	void OnFrontConnected();
 
-	///µÇÂ¼ÇëÇóÏìÓ¦
+	///ç™»å½•è¯·æ±‚å“åº”
 	void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
-	///¶©ÔÄĞĞÇéÓ¦´ğ
+	///è®¢é˜…è¡Œæƒ…åº”ç­”
 	void OnRspSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
-	///È¡Ïû¶©ÔÄĞĞÇéÓ¦´ğ
+	///å–æ¶ˆè®¢é˜…è¡Œæƒ…åº”ç­”
 	void OnRspUnSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
-	///Éî¶ÈĞĞÇéÍ¨Öª
+	///æ·±åº¦è¡Œæƒ…é€šçŸ¥
 	void OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData);
 
-	///	ÓÃ»§µÇÂ¼
+	///	ç”¨æˆ·ç™»å½•
 	void	ReqUserLogin();
 
-	///	¶©ÔÄºÏÔ¼
+	///	è®¢é˜…åˆçº¦
 	void	SubscribeMarketData();
 
-	///	¶ÁÈ¡´íÎóĞÅÏ¢
+	///	è¯»å–é”™è¯¯ä¿¡æ¯
 	bool	IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo);
 
 };
@@ -73,101 +71,102 @@ public:
 	TD(Carbon* _pC) :pC(_pC) {}
 
 	void log(std::string s);
-	///µ±¿Í»§¶ËÓë½»Ò×ºóÌ¨½¨Á¢ÆğÍ¨ĞÅÁ¬½ÓÊ±£¨»¹Î´µÇÂ¼Ç°£©£¬¸Ã·½·¨±»µ÷ÓÃ¡£
+	///å½“å®¢æˆ·ç«¯ä¸äº¤æ˜“åå°å»ºç«‹èµ·é€šä¿¡è¿æ¥æ—¶ï¼ˆè¿˜æœªç™»å½•å‰ï¼‰ï¼Œè¯¥æ–¹æ³•è¢«è°ƒç”¨ã€‚
 
 	void OnFrontConnected();
 
-	///µÇÂ¼ÇëÇóÏìÓ¦
+	///ç™»å½•è¯·æ±‚å“åº”
 	void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
-	///Í¶×ÊÕß½áËã½á¹ûÈ·ÈÏÏìÓ¦
+	///æŠ•èµ„è€…ç»“ç®—ç»“æœç¡®è®¤å“åº”
 	void OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
-	///ÇëÇó²éÑ¯ºÏÔ¼ÏìÓ¦
+	///è¯·æ±‚æŸ¥è¯¢åˆçº¦å“åº”
 	void OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
-	///ÇëÇó²éÑ¯×Ê½ğÕË»§ÏìÓ¦
+	///è¯·æ±‚æŸ¥è¯¢èµ„é‡‘è´¦æˆ·å“åº”
 	void OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAccount, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
-	///ÇëÇó²éÑ¯Í¶×ÊÕß³Ö²ÖÏìÓ¦
+	///è¯·æ±‚æŸ¥è¯¢æŠ•èµ„è€…æŒä»“å“åº”
 	void OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvestorPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
-	///±¨µ¥Â¼ÈëÇëÇóÏìÓ¦
+	///æŠ¥å•å½•å…¥è¯·æ±‚å“åº”
 	void OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
-	///±¨µ¥²Ù×÷ÇëÇóÏìÓ¦
+	///æŠ¥å•æ“ä½œè¯·æ±‚å“åº”
 	void OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
-	///´íÎóÓ¦´ğ
+	///é”™è¯¯åº”ç­”
 	void OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
-	///µ±¿Í»§¶ËÓë½»Ò×ºóÌ¨Í¨ĞÅÁ¬½Ó¶Ï¿ªÊ±£¬¸Ã·½·¨±»µ÷ÓÃ¡£µ±·¢ÉúÕâ¸öÇé¿öºó£¬API»á×Ô¶¯ÖØĞÂÁ¬½Ó£¬¿Í»§¶Ë¿É²»×ö´¦Àí¡£
+	///å½“å®¢æˆ·ç«¯ä¸äº¤æ˜“åå°é€šä¿¡è¿æ¥æ–­å¼€æ—¶ï¼Œè¯¥æ–¹æ³•è¢«è°ƒç”¨ã€‚å½“å‘ç”Ÿè¿™ä¸ªæƒ…å†µåï¼ŒAPIä¼šè‡ªåŠ¨é‡æ–°è¿æ¥ï¼Œå®¢æˆ·ç«¯å¯ä¸åšå¤„ç†ã€‚
 	void OnFrontDisconnected(int nReason);
 
-	///ĞÄÌø³¬Ê±¾¯¸æ¡£µ±³¤Ê±¼äÎ´ÊÕµ½±¨ÎÄÊ±£¬¸Ã·½·¨±»µ÷ÓÃ¡£
+	///å¿ƒè·³è¶…æ—¶è­¦å‘Šã€‚å½“é•¿æ—¶é—´æœªæ”¶åˆ°æŠ¥æ–‡æ—¶ï¼Œè¯¥æ–¹æ³•è¢«è°ƒç”¨ã€‚
 	void OnHeartBeatWarning(int nTimeLapse);
 
-	///±¨µ¥Í¨Öª
+	///æŠ¥å•é€šçŸ¥
 	void OnRtnOrder(CThostFtdcOrderField *pOrder);
 
-	///³É½»Í¨Öª
+	///æˆäº¤é€šçŸ¥
 	void OnRtnTrade(CThostFtdcTradeField *pTrade);
 
-	///ÇëÇó²éÑ¯±¨µ¥ÏìÓ¦
+	///è¯·æ±‚æŸ¥è¯¢æŠ¥å•å“åº”
 	void OnRspQryOrder(CThostFtdcOrderField *pOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
-	///ÇëÇó²éÑ¯³É½»ÏìÓ¦
+	///è¯·æ±‚æŸ¥è¯¢æˆäº¤å“åº”
 	void OnRspQryTrade(CThostFtdcTradeField *pTrade, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
-	///ÇëÇó²éÑ¯Í¶×ÊÕß³Ö²ÖÃ÷Ï¸ÏìÓ¦
+	///è¯·æ±‚æŸ¥è¯¢æŠ•èµ„è€…æŒä»“æ˜ç»†å“åº”
 	void OnRspQryInvestorPositionDetail(CThostFtdcInvestorPositionDetailField *pInvestorPositionDetail, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
-	///ÓÃ»§µÇÂ¼ÇëÇó
+	///ç”¨æˆ·ç™»å½•è¯·æ±‚
 	void ReqUserLogin();
 
 
-	///Í¶×ÊÕß½áËã½á¹ûÈ·ÈÏ
+	///æŠ•èµ„è€…ç»“ç®—ç»“æœç¡®è®¤
 	void ReqSettlementInfoConfirm();
 
-	///ÇëÇó²éÑ¯ºÏÔ¼
+	///è¯·æ±‚æŸ¥è¯¢åˆçº¦
 	void ReqQryInstrument();
 
-	///ÇëÇó²éÑ¯×Ê½ğÕË»§
+	///è¯·æ±‚æŸ¥è¯¢èµ„é‡‘è´¦æˆ·
 	void ReqQryTradingAccount();
 
-	///ÇëÇó²éÑ¯Í¶×ÊÕß³Ö²Ö
+	///è¯·æ±‚æŸ¥è¯¢æŠ•èµ„è€…æŒä»“
 	void ReqQryInvestorPosition();
 
-	///±¨µ¥Â¼ÈëÇëÇó
+	///æŠ¥å•å½•å…¥è¯·æ±‚
 	void ReqOrderInsert();
 
-	///±¨µ¥²Ù×÷ÇëÇó
+	///æŠ¥å•æ“ä½œè¯·æ±‚
 	void ReqOrderAction(CThostFtdcRspInfoField *pRspInfo);
 
-	////´íÎóÏìÓ¦
+	////é”™è¯¯å“åº”
 	bool IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo);
 
-	///±¨µ¥²éÑ¯ÇëÇó
+	///æŠ¥å•æŸ¥è¯¢è¯·æ±‚
 	void ReqQryOrder();
 
-	///³É½»²éÑ¯ÇëÇó
+	///æˆäº¤æŸ¥è¯¢è¯·æ±‚
 	void ReqQryTrade();
 
-	//ÇëÇó²éÑ¯Í¶×ÊÕß³Ö²ÖÃ÷Ï¸
+	//è¯·æ±‚æŸ¥è¯¢æŠ•èµ„è€…æŒä»“æ˜ç»†
 	void ReqQryInvestorPositionDetail();
 
 };
 
 
-class Carbon {
+class Carbon 
+{
 private:
-	int				requestID;
-	void			*m_socket;
-	void			*m_context;
-	MD				*pmds;
-	TD				*ptds;
-	CThostFtdcMdApi	*pmda;
-	CThostFtdcTraderApi		*ptda;
+	int			requestID;
+	void			*m_socket;	//	for zmq
+	void			*m_context;	//	for zmq
+	MD			*pmds;	//	Md Spi
+	TD			*ptds;	//	Td Spi
+	CThostFtdcMdApi		*pmda;	//	Md Api
+	CThostFtdcTraderApi	*ptda;	//	Td Api
 	std::string		md_front,td_front;
 	std::string		brokerid;
 	std::string		accountNum;
@@ -192,22 +191,22 @@ public:
 
 	int init() {
 		md_front = msg("md_front");
-		std::cout << "===»ñÈ¡ĞĞÇéµØÖ·===" << std::endl;
+		std::cout << "===è·å–è¡Œæƒ…åœ°å€===" << std::endl;
 		std::cout << md_front << std::endl;
 		td_front = msg("td_front");
-		std::cout << "===»ñÈ¡½»Ò×µØÖ·===" << std::endl;
+		std::cout << "===è·å–äº¤æ˜“åœ°å€===" << std::endl;
 		std::cout << td_front << std::endl;
 		brokerid = msg("broker_id");
-		std::cout << "===»ñÈ¡×ùÏ¯±àºÅ===" << std::endl;
+		std::cout << "===è·å–åº§å¸­ç¼–å·===" << std::endl;
 		std::cout << brokerid << std::endl;
 		accountNum = msg("account_num");
-		std::cout << "===»ñÈ¡ÕËºÅ===" << std::endl;
+		std::cout << "===è·å–è´¦å·===" << std::endl;
 		std::cout << accountNum << std::endl;
 		accountPwd = msg("account_pwd");
-		std::cout << "===»ñÈ¡ÃÜÂë===" << std::endl;
+		std::cout << "===è·å–å¯†ç ===" << std::endl;
 		std::cout << "ok!" << std::endl;
 		symbol = msg("this_symbol");
-		std::cout << "===Éè¶¨ºÏÔ¼===" << std::endl;
+		std::cout << "===è®¾å®šåˆçº¦===" << std::endl;
 		std::cout << symbol << std::endl;
 
 		char *md_buf = new char[strlen(md_front.c_str()) + 1];
@@ -222,15 +221,18 @@ public:
 		ptda->SubscribePublicTopic(THOST_TERT_QUICK);
 		ptda->SubscribePrivateTopic(THOST_TERT_QUICK);
 		ptda->RegisterFront(td_buf);
+		
 		pmda = CThostFtdcMdApi::CreateFtdcMdApi(".\\mdflow\\");
 		pmds = new MD(this);
 		pmda->RegisterSpi(pmds);
 		pmda->RegisterFront(md_buf);
-		//  Æô¶¯³õÊ¼»¯
+		
+		//  å¯åŠ¨åˆå§‹åŒ–
 		ptda->Init();
 		std::cout << "ptda->init()" << std::endl;
 		ptda->Join();
 		std::cout << "ptda->join()" << std::endl;
+		
 		return 0;
 	}
 
@@ -263,6 +265,8 @@ public:
 //===========================================================================================================================
 
 Carbon*	pC;
+
+//===========================================================================================================================
 // for MD Spi
 bool MD::IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo) {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
@@ -436,21 +440,19 @@ void TD::OnRspQryInvestorPositionDetail(CThostFtdcInvestorPositionDetailField *p
 };
 
 
-
-
 //===========================================================================================================================
+
 int main(int argc,const char* argv[])
 {
-	SetConsoleTitle(_T("CTP½»Ò×ÖÕ¶Ë [qq:129769]"));
+	SetConsoleTitle(_T("CTPäº¤æ˜“ç»ˆç«¯ [qq:129769]"));
 	if ( argc > 1) {
-		std::cout << ">>>Á¬½Ó×Ô¶¨Òå·şÎñÆ÷: " << argv[1] << std::endl;
+		std::cout << ">>>è¿æ¥è‡ªå®šä¹‰æœåŠ¡å™¨: " << argv[1] << std::endl;
 		pC = new Carbon(argv[1]);
 	}
 	else{
-		std::cout << ">>>Á¬½ÓÄ¬ÈÏ·şÎñÆ÷: " << CoreServer << std::endl;
+		std::cout << ">>>è¿æ¥é»˜è®¤æœåŠ¡å™¨: " << CoreServer << std::endl;
 		pC = new Carbon(CoreServer);
 	}
-
 
 	system("pause");
     return 0;
