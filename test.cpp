@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include <iostream>
+#include <sstream>
 #include "zmsg.hpp"
 //#include "ThostFtdcMdApi.h"
 //#include "MdSpi.h"
@@ -67,6 +68,14 @@ public:
 		return "logged:"+s;
 	}
 
+	std::string error(int err) {
+		std::stringstream ss;
+		std::string sto;
+		ss << err;
+		ss >> sto;
+		return msg("error_" + sto);
+	}
+
 	std::string msg(std::string s) {
 		zmsg msg(s.c_str());
 		msg.send((zmq::socket_t &)m_socket);
@@ -94,11 +103,7 @@ int main(int argc,const char* argv[])
 
 	std::cout << pC->getID() << std::endl;
 	std::cout << pC->getID() << std::endl;
-	std::cout << pC->msg("error_0") << std::endl;
-	std::cout << pC->msg("error_1") << std::endl;
-	std::cout << pC->msg("error_2") << std::endl;
-	std::cout << pC->msg("error_3") << std::endl;
-	std::cout << pC->msg("error_4") << std::endl;
+	std::cout << pC->error(0) << std::endl;
 	std::cout << pC->log("ok") << std::endl;
 	system("pause");
     return 0;
