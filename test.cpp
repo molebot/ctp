@@ -58,9 +58,6 @@ public:
 	///	订阅合约
 	void	SubscribeMarketData();
 
-	///	读取错误信息
-	bool	IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo);
-
 };
 
 class TD : public CThostFtdcTraderSpi
@@ -123,7 +120,6 @@ public:
 	///用户登录请求
 	void ReqUserLogin();
 
-
 	///投资者结算结果确认
 	void ReqSettlementInfoConfirm();
 
@@ -141,9 +137,6 @@ public:
 
 	///报单操作请求
 	void ReqOrderAction(CThostFtdcRspInfoField *pRspInfo);
-
-	////错误响应
-	bool IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo);
 
 	///报单查询请求
 	void ReqQryOrder();
