@@ -151,6 +151,8 @@
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="ThostFtdcUserApiDataType.h" />
+    <ClInclude Include="ThostFtdcUserApiStruct.h" />
     <ClInclude Include="zhelper.hpp" />
     <ClInclude Include="zmq.hpp" />
     <ClInclude Include="zmsg.hpp" />
