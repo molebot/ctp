@@ -113,7 +113,7 @@ public:
 
 };
 
-
+///===================================================================================================================
 class Carbon 
 {
 private:
@@ -311,6 +311,35 @@ public:
 		pmda->Init();
 	}
 
+	void tdOnRspQryOrder(CThostFtdcOrderField *p){
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+		
+	}
+	void tdOnRspOrderInsert(CThostFtdcInputOrderField *p){
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+		
+	}
+	void tdOnRspOrderAction(CThostFtdcInputOrderActionField *p){
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+		
+	}
+	void tdOnRtnOrder(CThostFtdcOrderField *p){
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+		
+	}
+	void tdOnRtnTrade(CThostFtdcTradeField *p){
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+		
+	}
+	void tdOnRspQryTrade(CThostFtdcTradeField *p){
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+		
+	}
+	void tdOnRspQryInvestorPositionDetail(CThostFtdcInvestorPositionDetailField *p){
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+		
+	}
+	
 	void mdReqUserLogin() {
 		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 		CThostFtdcReqUserLoginField req;
@@ -459,30 +488,51 @@ void TD::OnHeartBeatWarning(int nTimeLapse) {
 ///	报单查询响应
 void TD::OnRspQryOrder(CThostFtdcOrderField *pOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+	if (!pC->isErrorRspInfo(pRspInfo) && pOrder) {
+		pC->tdOnRspQryOrder(pOrder);
+	}
 };
 ///	报单响应
 void TD::OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+	if (!pC->isErrorRspInfo(pRspInfo) && pInputOrder) {
+		pC->tdOnRspOrderInsert(pInputOrder);
+	}
 };
 ///	撤单响应
 void TD::OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-};
-///	保单回报
-void TD::OnRtnOrder(CThostFtdcOrderField *pOrder) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-};
-///	成交回报
-void TD::OnRtnTrade(CThostFtdcTradeField *pTrade) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+	if (!pC->isErrorRspInfo(pRspInfo) && pInputOrderAction) {
+		pC->tdOnRspOrderAction(pInputOrderAction);
+	}
 };
 ///	成交查询响应
 void TD::OnRspQryTrade(CThostFtdcTradeField *pTrade, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+	if (!pC->isErrorRspInfo(pRspInfo) && pTrade) {
+		pC->tdOnRspQryTrade(pTrade);
+	}
 };
 ///	持仓详细查询响应
 void TD::OnRspQryInvestorPositionDetail(CThostFtdcInvestorPositionDetailField *pInvestorPositionDetail, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+	if (!pC->isErrorRspInfo(pRspInfo) && pInvestorPositionDetail) {
+		pC->tdRspQryInvestorPositionDetail(pInvestorPositionDetail);
+	}
+};
+///	保单回报
+void TD::OnRtnOrder(CThostFtdcOrderField *pOrder) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+	if (pOrder) {
+		pC->tdOnRtnOrder(pOrder);
+	}
+};
+///	成交回报
+void TD::OnRtnTrade(CThostFtdcTradeField *pTrade) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+	if (pTrade) {
+		pC->tdOnRtnTrade(pTrade);
+	}
 };
 
 
