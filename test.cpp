@@ -175,10 +175,10 @@ public:
 		std::cout << "===设定合约===" << std::endl;
 		std::cout << symbol << std::endl;
 
-		char *md_buf = new char[strlen(md_front.c_str()) + 1];
+		char *md_buf = new char[strlen(md_front.data()) + 1];
 		strcpy(md_buf, md_front.c_str());
 
-		char *td_buf = new char[strlen(td_front.c_str()) + 1];
+		char *td_buf = new char[strlen(td_front.data()) + 1];
 		strcpy(td_buf, td_front.c_str());
 
 		ptda = CThostFtdcTraderApi::CreateFtdcTraderApi(".\\tdflow\\");
@@ -223,7 +223,7 @@ public:
 	}
 
 	std::string msg(std::string s) {
-		zmsg _msg(s.c_str());
+		zmsg _msg(s.data());
 		_msg.send((zmq::socket_t &)m_socket);
 		_msg.recv((zmq::socket_t &)m_socket);
 		return _msg.body();
@@ -241,9 +241,9 @@ public:
 		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 		CThostFtdcReqUserLoginField req;
 		memset(&req, 0, sizeof(req));
-		strcpy(req.BrokerID, brokerid.c_str());
-		strcpy(req.UserID, accountNum.c_str());
-		strcpy(req.Password, accountPwd.c_str());
+		strcpy(req.BrokerID, brokerid.data());
+		strcpy(req.UserID, accountNum.data());
+		strcpy(req.Password, accountPwd.data());
 		int ret = ptda->ReqUserLogin(&req, get_requestId());
 		std::cout << "TD 发送登录请求: " << ((ret == 0) ? "成功" : "失败") << std::endl;
 	}
@@ -261,8 +261,8 @@ public:
 		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 		CThostFtdcQrySettlementInfoConfirmField req;
 		memset(&req, 0, sizeof(req));
-		strcpy(req.BrokerID, brokerid.c_str());
-		strcpy(req.InvestorID, accountNum.c_str());
+		strcpy(req.BrokerID, brokerid.data());
+		strcpy(req.InvestorID, accountNum.data());
 		int ret = ptda->ReqQrySettlementInfoConfirm(&req, get_requestId());
 		std::cout << "TD 发送结算单确认请求: " << ((ret == 0) ? "成功" : "失败") << std::endl;
 	}
@@ -278,8 +278,8 @@ public:
 		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 		CThostFtdcQryTradingAccountField req;
 		memset(&req, 0, sizeof(req));
-		strcpy(req.BrokerID, brokerid.c_str());
-		strcpy(req.InvestorID, accountNum.c_str());
+		strcpy(req.BrokerID, brokerid.data());
+		strcpy(req.InvestorID, accountNum.data());
 		int ret = ptda->ReqQryTradingAccount(&req, get_requestId());
 		std::cout << "TD 发送帐户查询请求: " << ((ret == 0) ? "成功" : "失败") << std::endl;
 	}
@@ -295,9 +295,9 @@ public:
 		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 		CThostFtdcQryInvestorPositionField req;
 		memset(&req, 0, sizeof(req));
-		strcpy(req.BrokerID, brokerid.c_str());
-		strcpy(req.InvestorID, accountNum.c_str());
-		strcpy(req.InstrumentID, symbol.c_str());
+		strcpy(req.BrokerID, brokerid.data());
+		strcpy(req.InvestorID, accountNum.data());
+		strcpy(req.InstrumentID, symbol.data());
 		int ret = ptda->ReqQryInvestorPosition(&req, get_requestId());
 		std::cout << "TD 发送查询持仓请求: " << ((ret == 0) ? "成功" : "失败") << std::endl;
 	}
@@ -315,9 +315,9 @@ public:
 		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 		CThostFtdcReqUserLoginField req;
 		memset(&req, 0, sizeof(req));
-		strcpy(req.BrokerID, brokerid.c_str());
-		strcpy(req.UserID, accountNum.c_str());
-		strcpy(req.Password, accountPwd.c_str());
+		strcpy(req.BrokerID, brokerid.data());
+		strcpy(req.UserID, accountNum.data());
+		strcpy(req.Password, accountPwd.data());
 		int ret = pmda->ReqUserLogin(&req, get_requestId());
 		std::cout << "MD 发送登录请求: " << ((ret == 0) ? "成功" : "失败") << std::endl;
 	}
@@ -332,10 +332,8 @@ public:
 		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 		int len = 1;
 		char** pInstId = new char*[len];
-		std::stringstream ss;
-		char *out = new char[strlen(symbol.c_str()) + 1];
-		ss << symbol;
-		ss >> *out;
+		char *out = new char[strlen(symbol.data()) + 1];
+		strcpy(out,symbol.data());
 		for (int i = 0; i < len; i++)	pInstId[i] = out;
 		int ret = pmda->SubscribeMarketData(pInstId, len);
 		std::cout << "MD 发送订阅行情请求: " << ((ret == 0) ? "成功" : "失败") << std::endl;
