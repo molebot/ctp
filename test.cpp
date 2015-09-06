@@ -194,10 +194,10 @@ public:
 		pmda->RegisterFront(md_buf);
 		
 		//  启动初始化
+		info("TD_init");
 		ptda->Init();	//	触发TD::OnFrontConnected，启动初始化链条
 		//初始化链条完毕后pmda->init()；然后一起join
 		std::cout << "TD 开始初始化..." << std::endl;
-
 		return 0;
 	}
 
@@ -213,7 +213,12 @@ public:
 		msg("log_" + s);
 		return "logged:"+s;
 	}
-
+	void info(std::string s) {
+		log("info_" + s);
+	}
+	void debug(std::string s) {
+		log("debug_" + s);
+	}
 	std::string error(int err) {
 		std::stringstream ss;
 		std::string sto;
@@ -308,6 +313,7 @@ public:
 		std::cout << "今日持仓: " << p->TodayPosition << std::endl;
 		std::cout << "TD 初始化结束..." << std::endl;
 		std::cout << "MD 开始初始化..." << std::endl;
+		info("MD_init");
 		pmda->Init();
 	}
 
@@ -517,7 +523,7 @@ void TD::OnRspQryTrade(CThostFtdcTradeField *pTrade, CThostFtdcRspInfoField *pRs
 void TD::OnRspQryInvestorPositionDetail(CThostFtdcInvestorPositionDetailField *pInvestorPositionDetail, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	if (!pC->isErrorRspInfo(pRspInfo) && pInvestorPositionDetail) {
-		pC->tdRspQryInvestorPositionDetail(pInvestorPositionDetail);
+		pC->tdOnRspQryInvestorPositionDetail(pInvestorPositionDetail);
 	}
 };
 ///	保单回报
