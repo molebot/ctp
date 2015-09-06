@@ -157,19 +157,19 @@ public:
 
 	int init() {
 		md_front = msg("md_front");
-		std::cout << "===获取行情地址===" << std::endl;
+		std::cout << "===获取行情地址[MD_Front]===" << std::endl;
 		std::cout << md_front << std::endl;
 		td_front = msg("td_front");
-		std::cout << "===获取交易地址===" << std::endl;
+		std::cout << "===获取交易地址[TD_Front]===" << std::endl;
 		std::cout << td_front << std::endl;
 		brokerid = msg("broker_id");
-		std::cout << "===获取座席编号===" << std::endl;
+		std::cout << "===获取座席编号[BrokerID]===" << std::endl;
 		std::cout << brokerid << std::endl;
 		accountNum = msg("account_num");
-		std::cout << "===获取账号===" << std::endl;
+		std::cout << "===获取账号[InvestorID]===" << std::endl;
 		std::cout << accountNum << std::endl;
 		accountPwd = msg("account_pwd");
-		std::cout << "===获取密码===" << std::endl;
+		std::cout << "===获取密码[Password]===" << std::endl;
 		std::cout << "ok!" << std::endl;
 		symbol = msg("this_symbol");
 		std::cout << "===设定合约===" << std::endl;
@@ -253,7 +253,7 @@ public:
 		frontId = p->FrontID;
 		sessionId = p->SessionID;
 		orderRef = atoi(p->MaxOrderRef);
-		std::cout << "TD 响应登录成功 >>> FrontID: " << frontId << " SessionID: " << sessionId << " OrderRef: " << orderRef << std::endl;
+		std::cout << "TD 登录成功 >>> FrontID: " << frontId << " SessionID: " << sessionId << " OrderRef: " << orderRef << std::endl;
 		tdReqQrySettlementInfoConfirm();
 	}
 
@@ -299,7 +299,7 @@ public:
 		strcpy(req.InvestorID, accountNum.data());
 		strcpy(req.InstrumentID, symbol.data());
 		int ret = ptda->ReqQryInvestorPosition(&req, get_requestId());
-		std::cout << "TD 发送查询持仓请求: " << ((ret == 0) ? "成功" : "失败") << std::endl;
+		std::cout << "TD 发送持仓查询请求: " << ((ret == 0) ? "成功" : "失败") << std::endl;
 	}
 
 	void tdOnRspQryInvestorPosition(CThostFtdcInvestorPositionField *p) {
@@ -324,7 +324,7 @@ public:
 
 	void mdOnRspUserLogin(CThostFtdcRspUserLoginField *p) {
 		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-		std::cout << "MD 响应登录成功..." << std::endl;
+		std::cout << "MD 登录成功..." << std::endl;
 		mdSubscribeMarketData();
 	}
 
@@ -442,43 +442,45 @@ void TD::OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvestorPosi
 	}
 };
 
-void TD::OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-};
-
-void TD::OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-};
-
 void TD::OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	pC->isErrorRspInfo(pRspInfo);
 };
 
-void TD::OnRspQryOrder(CThostFtdcOrderField *pOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-};
-
 void TD::OnFrontDisconnected(int nReason) {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+	std::cout << "!!! 客户端连接中断..." << std::endl;
 };
 
 void TD::OnHeartBeatWarning(int nTimeLapse) {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+	std::cout << "!!! 心跳超时警告..." << std::endl;
 };
-
+///	报单查询响应
+void TD::OnRspQryOrder(CThostFtdcOrderField *pOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+///	报单响应
+void TD::OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+///	撤单响应
+void TD::OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+};
+///	保单回报
 void TD::OnRtnOrder(CThostFtdcOrderField *pOrder) {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 };
-
+///	成交回报
 void TD::OnRtnTrade(CThostFtdcTradeField *pTrade) {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 };
-
+///	成交查询响应
 void TD::OnRspQryTrade(CThostFtdcTradeField *pTrade, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 };
-
+///	持仓详细查询响应
 void TD::OnRspQryInvestorPositionDetail(CThostFtdcInvestorPositionDetailField *pInvestorPositionDetail, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 };
