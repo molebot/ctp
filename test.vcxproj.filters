@@ -39,6 +39,12 @@
     <ClInclude Include="ThostFtdcUserApiDataType.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ThostFtdcTraderApi.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ThostFtdcMdApi.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
