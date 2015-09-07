@@ -1,4 +1,3 @@
-﻿// ctp over zmq  by: molebot email: molebot@qq.com
 #include "stdafx.h"
 #include <iostream>
 #include <sstream>
@@ -247,7 +246,10 @@ public:
 		}
 		return ret_;
 	}
-
+	void tdOnFrontConnected(){
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+		tdReqUserLogin();
+	}
 	void tdReqUserLogin() {
 		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 		CThostFtdcReqUserLoginField req_;
@@ -408,6 +410,10 @@ public:
 		
 	}
 	
+	void mdOnFrontConnected(){
+		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+		mdReqUserLogin();
+	}
 	void mdReqUserLogin() {
 		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 		CThostFtdcReqUserLoginField req_;
@@ -454,45 +460,37 @@ Carbon*	pC;
 //===========================================================================================================================
 // for MD Spi
 void MD::OnRspError(CThostFtdcRspInfoField *pRspInfo,int nRequestID, bool bIsLast) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	pC->isErrorRspInfo(pRspInfo);
 };
 
 void MD::OnFrontDisconnected(int nReason) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	std::cout << "!!! 客户端连接中断..." << std::endl;
 };
 
 void MD::OnHeartBeatWarning(int nTimeLapse) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	std::cout << "!!! 心跳超时警告..." << std::endl;
 };
 
 void MD::OnFrontConnected() {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	pC->mdReqUserLogin();
+	pC->mdOnFrontConnected();
 };
 
 void MD::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	if (!pC->isErrorRspInfo(pRspInfo) && pRspUserLogin) {
 		pC->mdOnRspUserLogin(pRspUserLogin);
 	}
 };
 
 void MD::OnRspSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	if (!pC->isErrorRspInfo(pRspInfo)) {
 		pC->mdOnRspSubMarketData(pSpecificInstrument);
 	}
 };
 
 void MD::OnRspUnSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 };
 
 void MD::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	pC->mdOnRtnDepthMarketData(pDepthMarketData);
 };
 
@@ -500,106 +498,89 @@ void MD::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData) 
 // for TD Spi
 //	初始化链条
 void TD::OnFrontConnected() {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	pC->tdReqUserLogin();
+	pC->tdOnFrontConnected();
 };
 //	初始化链条
 void TD::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	if (!pC->isErrorRspInfo(pRspInfo) && pRspUserLogin){
 		pC->tdOnRspUserLogin(pRspUserLogin);
 	}
 };
 
 void TD::OnRspQrySettlementInfo(CThostFtdcSettlementInfoField *pSettlementInfo, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 };
 
 //	初始化链条
 void TD::OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	if (!pC->isErrorRspInfo(pRspInfo)) {
 		pC->tdOnRspSettlementInfoConfirm(pSettlementInfoConfirm);
 	}
 };
 
 void TD::OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 };
 //	初始化链条
 void TD::OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAccount, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	if (!pC->isErrorRspInfo(pRspInfo) && pTradingAccount) {
 		pC->tdOnRspQryTradingAccount(pTradingAccount);
 	}
 };
 //	初始化链条
 void TD::OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvestorPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	if (!pC->isErrorRspInfo(pRspInfo)) {
 		pC->tdOnRspQryInvestorPosition(pInvestorPosition);
 	}
 };
 
 void TD::OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	pC->isErrorRspInfo(pRspInfo);
 };
 
 void TD::OnFrontDisconnected(int nReason) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	std::cout << "!!! 客户端连接中断..." << std::endl;
 };
 
 void TD::OnHeartBeatWarning(int nTimeLapse) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	std::cout << "!!! 心跳超时警告..." << std::endl;
 };
 ///	报单查询响应
 void TD::OnRspQryOrder(CThostFtdcOrderField *pOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	if (!pC->isErrorRspInfo(pRspInfo) && pOrder) {
 		pC->tdOnRspQryOrder(pOrder);
 	}
 };
 ///	报单响应
 void TD::OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	if (!pC->isErrorRspInfo(pRspInfo) && pInputOrder) {
 		pC->tdOnRspOrderInsert(pInputOrder);
 	}
 };
 ///	撤单响应
 void TD::OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	if (!pC->isErrorRspInfo(pRspInfo) && pInputOrderAction) {
 		pC->tdOnRspOrderAction(pInputOrderAction);
 	}
 };
 ///	成交查询响应
 void TD::OnRspQryTrade(CThostFtdcTradeField *pTrade, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	if (!pC->isErrorRspInfo(pRspInfo) && pTrade) {
 		pC->tdOnRspQryTrade(pTrade);
 	}
 };
 ///	持仓详细查询响应
 void TD::OnRspQryInvestorPositionDetail(CThostFtdcInvestorPositionDetailField *pInvestorPositionDetail, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	if (!pC->isErrorRspInfo(pRspInfo) && pInvestorPositionDetail) {
 		pC->tdOnRspQryInvestorPositionDetail(pInvestorPositionDetail);
 	}
 };
 ///	报单回报
 void TD::OnRtnOrder(CThostFtdcOrderField *pOrder) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	if (pOrder) {
 		pC->tdOnRtnOrder(pOrder);
 	}
 };
 ///	成交回报
 void TD::OnRtnTrade(CThostFtdcTradeField *pTrade) {
-	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	if (pTrade) {
 		pC->tdOnRtnTrade(pTrade);
 	}
