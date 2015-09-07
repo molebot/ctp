@@ -133,7 +133,7 @@ private:
 	int			order_ref;
 	int			front_id;
 	int			session_id;
-	time_t		timer;
+	time_t			timer;
 	bool			is_initing;
 
 public:
