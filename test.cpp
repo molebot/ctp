@@ -192,7 +192,7 @@ public:
 		pmds = new MD(this);
 		pmda->RegisterSpi(pmds);
 		pmda->RegisterFront(md_buf);
-		
+
 		//  启动初始化
 		info("TD_init");
 		ptda->Init();	//	触发TD::OnFrontConnected，启动初始化链条
@@ -261,7 +261,6 @@ public:
 		std::cout << "TD 登录成功 >>> FrontID: " << frontId << " SessionID: " << sessionId << " OrderRef: " << orderRef << std::endl;
 		tdReqQrySettlementInfoConfirm();
 	}
-
 	void tdReqQrySettlementInfoConfirm() {
 		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 		CThostFtdcQrySettlementInfoConfirmField req;
@@ -276,7 +275,7 @@ public:
 		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 		std::cout << "TD 结算单确认成功:" << std::endl;
 		std::cout << "结算单: " << p->ConfirmDate << p->ConfirmTime << " 已确认" << std::endl;
-		tdReqQryInvestorPosition();
+		tdReqQryTradingAccount();
 	}
 
 	void tdReqQryTradingAccount() {
@@ -548,11 +547,11 @@ int main(int argc,const char* argv[])
 {
 	SetConsoleTitle(_T("CTP交易终端 [qq:129769]"));
 	if ( argc > 1) {
-		std::cout << ">>>连接自定义服务器: " << argv[1] << std::endl;
+		std::cout << ">>>连接自定义服务器" << std::endl;
 		pC = new Carbon(argv[1]);
 	}
 	else{
-		std::cout << ">>>连接默认服务器: " << CoreServer << std::endl;
+		std::cout << ">>>连接默认服务器" << std::endl;
 		pC = new Carbon(CoreServer);
 	}
 
