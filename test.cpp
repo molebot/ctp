@@ -259,7 +259,8 @@ public:
 		sessionId = p->SessionID;
 		orderRef = atoi(p->MaxOrderRef);
 		std::cout << "TD 登录成功 >>> FrontID: " << frontId << " SessionID: " << sessionId << " OrderRef: " << orderRef << std::endl;
-		tdReqQrySettlementInfoConfirm();
+		tdReqQryTradingAccount();
+//		tdReqQrySettlementInfoConfirm();
 	}
 	void tdReqQrySettlementInfoConfirm() {
 		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
@@ -293,6 +294,8 @@ public:
 		std::cout << "TD 帐户查询成功:" << std::endl;
 		std::cout << "可用资金: " << p->Available << std::endl;
 		tdReqQryInvestorPosition();
+//		info("MD_init");
+	//	pmda->Init();
 	}
 
 	void tdReqQryInvestorPosition() {
@@ -303,6 +306,7 @@ public:
 		strcpy(req.InvestorID, accountNum.data());
 		strcpy(req.InstrumentID, symbol.data());
 		int ret = ptda->ReqQryInvestorPosition(&req, get_requestId());
+		std::cout << ret << std::endl;
 		std::cout << "TD 发送持仓查询请求: " << ((ret == 0) ? "成功" : "失败") << std::endl;
 	}
 
@@ -380,6 +384,7 @@ public:
 
 	void mdOnRtnDepthMarketData(CThostFtdcDepthMarketDataField *p) {
 		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+		std::cout << p->UpdateTime <<" : "<< p->LastPrice << std::endl;
 	}
 };
 //===========================================================================================================================
