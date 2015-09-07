@@ -210,7 +210,23 @@ public:
 		info("TD 开始初始化...");
 		return 0;
 	}
-
+	
+	std::string int2string(int in_){
+		std::stringstream tmp_;
+		std::string out_;
+		tmp_ << in_;
+		tmp_ >> out_;
+		return out_;
+	}
+	
+	std::string double2string(double in_){
+		std::stringstream tmp_;
+		std::string out_;
+		tmp_ << in_;
+		tmp_ >> out_;
+		return out_;
+	}
+	
 	int get_request_id() {
 		return ++request_id;
 	}
@@ -232,11 +248,7 @@ public:
 		log("debug_" + s_);
 	}
 	std::string error(int err_) {
-		std::stringstream ss_;
-		std::string sto_;
-		ss_ << err_;
-		ss_ >> sto_;
-		return msg("error_" + sto_);
+		return msg("error_" + int2string(err_));
 	}
 
 	std::string msg(std::string s_) {
@@ -342,8 +354,7 @@ public:
 	void tdOnRspQryTradingAccount(CThostFtdcTradingAccountField *p) {
 		info(__FUNCTION__);
 		info("TD 帐户查询成功:");
-		info("可用资金: ");
-		std::cout << p->Available << std::endl;
+		info("可用资金: "+double2string(p->Available));
 		tdReqQryInvestorPosition();
 	}
 
@@ -374,10 +385,10 @@ public:
 		info(__FUNCTION__);
 		info("TD 持仓查询成功:");
 		if (p) {
-			std::cout << "今日持仓: " << p->TodayPosition << std::endl;
+			info("今日持仓: " + int2string(p->TodayPosition));
 		}
 		else {
-			std::cout << "今日空仓... " << std::endl;
+			info("今日空仓... ");
 		}
 		info("TD 初始化结束...");
 		info("MD 开始初始化...");
