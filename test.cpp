@@ -117,8 +117,6 @@ public:
 class Carbon 
 {
 private:
-	int			request_id;
-	int			order_ref;
 	void			*m_socket;	//	for zmq
 	void			*m_context;	//	for zmq
 	MD			*pmds;	//	Md Spi
@@ -130,9 +128,11 @@ private:
 	std::string		account_num;
 	std::string		account_pwd;
 	std::string		this_symbol;
+	int			request_id;
+	int			order_ref;
 	int			front_id;
 	int			session_id;
-	bool		is_initing;
+	bool			is_initing;
 
 public:
 	Carbon(std::string server_) {
@@ -382,6 +382,7 @@ public:
 	void mdOnRspSubMarketData(CThostFtdcSpecificInstrumentField *p) {
 		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 		std::cout << "MD 订阅行情成功..." << std::endl;
+		is_initing = false;
 	}
 
 	void mdOnRtnDepthMarketData(CThostFtdcDepthMarketDataField *p) {
