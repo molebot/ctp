@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include <iostream>
 #include <sstream>
+#include <time.h>
 #include "zmsg.hpp"
 #include <vector>
 #include <string>
@@ -132,6 +133,7 @@ private:
 	int			order_ref;
 	int			front_id;
 	int			session_id;
+	time_t		timer;
 	bool			is_initing;
 
 public:
@@ -182,6 +184,8 @@ public:
 
 		char *td_buf = new char[strlen(td_front.data()) + 1];
 		strcpy(td_buf, td_front.c_str());
+
+		timer = time(NULL);
 
 		ptda = CThostFtdcTraderApi::CreateFtdcTraderApi(".\\tdflow\\");
 		ptds = new TD(this);
@@ -261,34 +265,71 @@ public:
 		session_id = p->SessionID;
 		order_ref = atoi(p->MaxOrderRef);
 		std::cout << "TD 登录成功 >>> FrontID: " << front_id << " SessionID: " << session_id << " OrderRef: " << order_ref << std::endl;
-		tdReqQryTradingAccount();
-//		tdReqQrySettlementInfoConfirm();
+		if (msg("confirmed_today") == "0") {
+			tdReqQrySettlementInfoConfirm();
+		}
+		else {
+			std::cout << "===#" << "跳过结算单确认..." << "#===" << std::endl;
+			tdReqQryTradingAccount();
+		}
 	}
 	void tdReqQrySettlementInfoConfirm() {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-		CThostFtdcQrySettlementInfoConfirmField req_;
-		memset(&req_, 0, sizeof(req_));
-		strcpy(req_.BrokerID, broker_id.data());
-		strcpy(req_.InvestorID, account_num.data());
-		int ret_ = ptda->ReqQrySettlementInfoConfirm(&req_, get_request_id());
-		std::cout << "TD 发送结算单确认请求: " << ((ret_ == 0) ? "成功" : "失败") << std::endl;
+		if (is_initing) {
+			Sleep(3000);
+			std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+			CThostFtdcQrySettlementInfoConfirmField req_;
+			memset(&req_, 0, sizeof(req_));
+			strcpy(req_.BrokerID, broker_id.data());
+			strcpy(req_.InvestorID, account_num.data());
+			int ret_ = ptda->ReqQrySettlementInfoConfirm(&req_, get_request_id());
+			std::cout << "TD 发送结算单确认请求: " << ((ret_ == 0) ? "成功" : "失败") << std::endl;
+		}
+		else if(time(NULL)-timer>=1) {
+			timer = time(NULL);
+			std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+			CThostFtdcQrySettlementInfoConfirmField req_;
+			memset(&req_, 0, sizeof(req_));
+			strcpy(req_.BrokerID, broker_id.data());
+			strcpy(req_.InvestorID, account_num.data());
+			int ret_ = ptda->ReqQrySettlementInfoConfirm(&req_, get_request_id());
+			std::cout << "TD 发送结算单确认请求: " << ((ret_ == 0) ? "成功" : "失败") << std::endl;
+		}
 	}
 
 	void tdOnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *p) {
 		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-		std::cout << "TD 结算单确认成功:" << std::endl;
-		std::cout << "结算单: " << p->ConfirmDate << p->ConfirmTime << " 已确认" << std::endl;
+		if (p) {
+			msg("confirm_today");
+			std::cout << "TD 结算单确认成功:" << std::endl;
+			std::cout << "结算单: " << p->ConfirmDate << p->ConfirmTime << " 已确认" << std::endl;
+		}
+		else {
+			std::cout << "TD 结算单已确认..." << std::endl;
+		}
 		tdReqQryTradingAccount();
 	}
 
 	void tdReqQryTradingAccount() {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-		CThostFtdcQryTradingAccountField req_;
-		memset(&req_, 0, sizeof(req_));
-		strcpy(req_.BrokerID, broker_id.data());
-		strcpy(req_.InvestorID, account_num.data());
-		int ret_ = ptda->ReqQryTradingAccount(&req_, get_request_id());
-		std::cout << "TD 发送帐户查询请求: " << ((ret_ == 0) ? "成功" : "失败") << std::endl;
+		if (is_initing) {
+			Sleep(3000);
+			std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+			CThostFtdcQryTradingAccountField req_;
+			memset(&req_, 0, sizeof(req_));
+			strcpy(req_.BrokerID, broker_id.data());
+			strcpy(req_.InvestorID, account_num.data());
+			int ret_ = ptda->ReqQryTradingAccount(&req_, get_request_id());
+			std::cout << "TD 发送帐户查询请求: " << ((ret_ == 0) ? "成功" : "失败") << std::endl;
+		}
+		else if (time(NULL) - timer >= 1) {
+			timer = time(NULL);
+			std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+			CThostFtdcQryTradingAccountField req_;
+			memset(&req_, 0, sizeof(req_));
+			strcpy(req_.BrokerID, broker_id.data());
+			strcpy(req_.InvestorID, account_num.data());
+			int ret_ = ptda->ReqQryTradingAccount(&req_, get_request_id());
+			std::cout << "TD 发送帐户查询请求: " << ((ret_ == 0) ? "成功" : "失败") << std::endl;
+		}
 	}
 
 	void tdOnRspQryTradingAccount(CThostFtdcTradingAccountField *p) {
@@ -296,26 +337,42 @@ public:
 		std::cout << "TD 帐户查询成功:" << std::endl;
 		std::cout << "可用资金: " << p->Available << std::endl;
 		tdReqQryInvestorPosition();
-//		info("MD_init");
-	//	pmda->Init();
 	}
 
 	void tdReqQryInvestorPosition() {
-		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-		CThostFtdcQryInvestorPositionField req_;
-		memset(&req_, 0, sizeof(req_));
-		strcpy(req_.BrokerID, broker_id.data());
-		strcpy(req_.InvestorID, account_num.data());
-		strcpy(req_.InstrumentID, this_symbol.data());
-		Sleep(1000);
-		int ret_ = ptda->ReqQryInvestorPosition(&req_, get_request_id());
-		std::cout << "TD 发送持仓查询请求: " << ((ret_ == 0) ? "成功" : "失败") << std::endl;
+		if (is_initing) {
+			Sleep(3000);
+			std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+			CThostFtdcQryInvestorPositionField req_;
+			memset(&req_, 0, sizeof(req_));
+			strcpy(req_.BrokerID, broker_id.data());
+			strcpy(req_.InvestorID, account_num.data());
+			strcpy(req_.InstrumentID, this_symbol.data());
+			int ret_ = ptda->ReqQryInvestorPosition(&req_, get_request_id());
+			std::cout << "TD 发送持仓查询请求: " << ((ret_ == 0) ? "成功" : "失败") << std::endl;
+		}
+		else if (time(NULL) - timer >= 1) {
+			timer = time(NULL);
+			std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
+			CThostFtdcQryInvestorPositionField req_;
+			memset(&req_, 0, sizeof(req_));
+			strcpy(req_.BrokerID, broker_id.data());
+			strcpy(req_.InvestorID, account_num.data());
+			strcpy(req_.InstrumentID, this_symbol.data());
+			int ret_ = ptda->ReqQryInvestorPosition(&req_, get_request_id());
+			std::cout << "TD 发送持仓查询请求: " << ((ret_ == 0) ? "成功" : "失败") << std::endl;
+		}
 	}
 
 	void tdOnRspQryInvestorPosition(CThostFtdcInvestorPositionField *p) {
 		std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 		std::cout << "TD 持仓查询成功:" << std::endl;
-		std::cout << "今日持仓: " << p->TodayPosition << std::endl;
+		if (p) {
+			std::cout << "今日持仓: " << p->TodayPosition << std::endl;
+		}
+		else {
+			std::cout << "今日空仓... " << std::endl;
+		}
 		std::cout << "TD 初始化结束..." << std::endl;
 		std::cout << "MD 开始初始化..." << std::endl;
 		info("MD_init");
@@ -461,7 +518,7 @@ void TD::OnRspQrySettlementInfo(CThostFtdcSettlementInfoField *pSettlementInfo, 
 //	初始化链条
 void TD::OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	if (!pC->isErrorRspInfo(pRspInfo) && pSettlementInfoConfirm) {
+	if (!pC->isErrorRspInfo(pRspInfo)) {
 		pC->tdOnRspSettlementInfoConfirm(pSettlementInfoConfirm);
 	}
 };
@@ -479,7 +536,7 @@ void TD::OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAccount, 
 //	初始化链条
 void TD::OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvestorPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
-	if (!pC->isErrorRspInfo(pRspInfo) && pInvestorPosition) {
+	if (!pC->isErrorRspInfo(pRspInfo)) {
 		pC->tdOnRspQryInvestorPosition(pInvestorPosition);
 	}
 };
