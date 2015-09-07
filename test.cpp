@@ -590,7 +590,7 @@ void TD::OnRspQryInvestorPositionDetail(CThostFtdcInvestorPositionDetailField *p
 		pC->tdOnRspQryInvestorPositionDetail(pInvestorPositionDetail);
 	}
 };
-///	保单回报
+///	报单回报
 void TD::OnRtnOrder(CThostFtdcOrderField *pOrder) {
 	std::cout << "===#" << __FUNCTION__ << "#===" << std::endl;
 	if (pOrder) {
