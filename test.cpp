@@ -138,6 +138,9 @@ private:
 	int			order_ref;
 	int			front_id;
 	int			session_id;
+	int			position;		//	持仓
+	int			todo;			//	目标持仓
+	double		money;			//	资金
 	time_t			timer;
 	bool			is_initing;
 
@@ -218,7 +221,10 @@ public:
 		tmp_ >> out_;
 		return out_;
 	}
-	
+	int string2int(std::string in_) {
+		int out_ = atoi(in_.data());
+		return out_;
+	}
 	std::string double2string(double in_){
 		std::stringstream tmp_;
 		std::string out_;
@@ -354,7 +360,8 @@ public:
 	void tdOnRspQryTradingAccount(CThostFtdcTradingAccountField *p) {
 		info(__FUNCTION__);
 		info("TD 帐户查询成功:");
-		info("可用资金: "+double2string(p->Available));
+		money = p->Available;
+		info("可用资金: "+double2string(money));
 		tdReqQryInvestorPosition();
 	}
 
@@ -385,9 +392,11 @@ public:
 		info(__FUNCTION__);
 		info("TD 持仓查询成功:");
 		if (p) {
-			info("今日持仓: " + int2string(p->TodayPosition));
+			position = p->TodayPosition;
+			info("今日持仓: " + int2string(position));
 		}
 		else {
+			position = 0;
 			info("今日空仓... ");
 		}
 		info("TD 初始化结束...");
@@ -467,7 +476,36 @@ public:
 
 	void mdOnRtnDepthMarketData(CThostFtdcDepthMarketDataField *p) {
 		info(__FUNCTION__);
-		std::cout << p->UpdateTime <<" : "<< p->LastPrice << std::endl;
+		double price = (p->AskPrice1+p->BidPrice1) / 2.0;
+		std::string price_str = double2string(price);
+		std::string todo_str = msg(price_str);
+		int todo_ = string2int(todo_str);
+		info(price_str+" => "+todo_str);
+		todo = todo_;
+		if (todo!=position) {
+			checkPosition();
+		}
+	}
+	void tdOpenPosition(int in_) {
+		info(__FUNCTION__);
+	}
+	void tdClosePosition(int in_) {
+		info(__FUNCTION__);
+	}
+	void checkPosition() {
+		info(__FUNCTION__);
+		if (todo*position >= 0){
+			if (abs(todo) > abs(position)) {
+				tdOpenPosition(todo-position);
+			}
+			else if (abs(todo) < abs(position)) {
+				tdClosePosition(position-todo);
+			}
+		}
+		else {
+			tdClosePosition(position);
+			tdOpenPosition(todo);
+		}
 	}
 };
 //===========================================================================================================================
