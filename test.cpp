@@ -498,7 +498,7 @@ public:
 			if (abs(todo) > abs(position)) {
 				tdOpenPosition(todo-position);
 			}
-			else if (abs(todo) < abs(position)) {
+			else {
 				tdClosePosition(position-todo);
 			}
 		}

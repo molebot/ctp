@@ -1,4 +1,4 @@
-﻿生成启动时间为 2015/9/8 8:43:40。
+﻿生成启动时间为 2015/9/8 9:05:07。
      1>项目“C:\Users\apple\Documents\Visual Studio 2015\Projects\test\test\test.vcxproj”在节点 2 上(Rebuild 个目标)。
      1>ClCompile:
          C:\Program Files\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I"C:\Program Files\ZeroMQ 4.0.4\include" /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yc"stdafx.h" /Fp"Release\test.pch" /Fo"Release\\" /Fd"Release\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt stdafx.cpp
@@ -16,4 +16,4 @@
 
 已成功生成。
 
-已用时间 00:00:05.86
+已用时间 00:00:06.28
