@@ -13,7 +13,7 @@
 size_t spd_size = 1048576;
 //spdlog::set_async_mode(spd_size);
 auto console = spdlog::stdout_logger_mt("console");
-auto logger = spdlog::rotating_logger_mt("log", "log", spd_size * 5, 10);
+auto logger = spdlog::rotating_logger_mt("log", "log", spd_size, 10);
 
 
 std::string CoreServer = "tcp://192.168.1.234:5555";
@@ -141,6 +141,8 @@ private:
 	int			position;		//	持仓
 	int			todo;			//	目标持仓
 	double		money;			//	资金
+	double		price_ask;
+	double		price_bid;
 	time_t			timer;
 	bool			is_initing;
 
@@ -294,14 +296,15 @@ public:
 		order_ref = atoi(p->MaxOrderRef);
 		info("TD 登录成功...");
 		if (msg("confirmed_today") == "0") {
-			tdReqQrySettlementInfoConfirm();
+			tdReqSettlementInfoConfirm();
 		}
 		else {
 			info("跳过结算单确认...");
 			tdReqQryTradingAccount();
 		}
 	}
-	void tdReqQrySettlementInfoConfirm() {
+
+	void tdReqSettlementInfoConfirm() {
 		bool do_it = false;
 		if (is_initing) {
 			Sleep(3000);
@@ -313,11 +316,11 @@ public:
 		}
 		if (do_it) {
 			info(__FUNCTION__);
-			CThostFtdcQrySettlementInfoConfirmField req_;
+			CThostFtdcSettlementInfoConfirmField req_;
 			memset(&req_, 0, sizeof(req_));
 			strcpy(req_.BrokerID, broker_id.data());
 			strcpy(req_.InvestorID, account_num.data());
-			int ret_ = ptda->ReqQrySettlementInfoConfirm(&req_, get_request_id());
+			int ret_ = ptda->ReqSettlementInfoConfirm(&req_, get_request_id());
 			info("TD 发送结算单确认请求: ");//  
 			info((ret_ == 0) ? "成功" : "失败");
 		}
@@ -328,9 +331,6 @@ public:
 		if (p) {
 			msg("confirm_today");
 			info("TD 结算单确认成功...");
-		}
-		else {
-			info("TD 结算单已确认...");
 		}
 		tdReqQryTradingAccount();
 	}
@@ -419,7 +419,7 @@ public:
 	}
 	void tdOnRtnOrder(CThostFtdcOrderField *p){
 		info(__FUNCTION__);
-
+		tdReqQryInvestorPosition();
 	}
 	void tdOnRtnTrade(CThostFtdcTradeField *p){
 		info(__FUNCTION__);
@@ -480,17 +480,85 @@ public:
 		std::string price_str = double2string(price);
 		std::string todo_str = msg(price_str);
 		int todo_ = string2int(todo_str);
-		info(price_str+" => "+todo_str);
+		info(price_str+" => "+todo_str+" [ "+int2string(position)+" ]");
 		todo = todo_;
-		if (todo!=position) {
+		if (todo!=position && time(NULL)-timer>1) {
+			timer = time(NULL);
+			price_ask = p->AskPrice1;
+			price_bid = p->BidPrice1;
 			checkPosition();
 		}
 	}
 	void tdOpenPosition(int in_) {
+		position = position + in_;
 		info(__FUNCTION__);
+		CThostFtdcInputOrderField req_;
+		memset(&req_,0,sizeof(req_));
+		strcpy(req_.BrokerID, broker_id.data());
+		strcpy(req_.InvestorID, account_num.data());
+		strcpy(req_.InstrumentID, this_symbol.data());
+		strcpy(req_.OrderRef, int2string(get_order_ref()).data());
+		if (in_ > 0) {
+			req_.LimitPrice = price_ask + 0.4;
+			req_.Direction = THOST_FTDC_D_Buy;
+		}
+		else {
+			req_.LimitPrice = price_bid - 0.4;
+			req_.Direction = THOST_FTDC_D_Sell;
+		}
+		req_.OrderPriceType = THOST_FTDC_OPT_LimitPrice;
+		req_.TimeCondition = THOST_FTDC_TC_IOC;
+		req_.CombOffsetFlag[0] = '0';		//	"0" 开 "1" 平  "3" 平今
+		req_.VolumeTotalOriginal = abs(in_);
+
+		//	
+		req_.CombHedgeFlag[0] = THOST_FTDC_HF_Speculation;
+		req_.VolumeCondition = THOST_FTDC_VC_AV;
+		req_.MinVolume = 1;
+		req_.ContingentCondition = THOST_FTDC_CC_Immediately;
+		req_.ForceCloseReason = THOST_FTDC_FCC_NotForceClose;
+		req_.IsAutoSuspend = 0;
+		req_.UserForceClose = 0;
+
+		int ret_ = ptda->ReqOrderInsert(&req_, get_request_id());
+		info("TD 发送开仓交易请求: ");
+		info((ret_ == 0) ? "成功" : "失败");
 	}
+
 	void tdClosePosition(int in_) {
+		position = position - in_;
 		info(__FUNCTION__);
+		CThostFtdcInputOrderField req_;
+		memset(&req_, 0, sizeof(req_));
+		strcpy(req_.BrokerID, broker_id.data());
+		strcpy(req_.InvestorID, account_num.data());
+		strcpy(req_.InstrumentID, this_symbol.data());
+		strcpy(req_.OrderRef, int2string(get_order_ref()).data());
+		if (in_ < 0) {
+			req_.LimitPrice = price_ask + 0.4;
+			req_.Direction = THOST_FTDC_D_Buy;
+		}
+		else {
+			req_.LimitPrice = price_bid - 0.4;
+			req_.Direction = THOST_FTDC_D_Sell;
+		}
+		req_.OrderPriceType = THOST_FTDC_OPT_LimitPrice;
+		req_.TimeCondition = THOST_FTDC_TC_IOC;
+		req_.CombOffsetFlag[0] = '3';		//	"0" 开 "1" 平  "3" 平今
+		req_.VolumeTotalOriginal = abs(in_);
+
+		//	
+		req_.CombHedgeFlag[0] = THOST_FTDC_HF_Speculation;
+		req_.VolumeCondition = THOST_FTDC_VC_AV;
+		req_.MinVolume = 1;
+		req_.ContingentCondition = THOST_FTDC_CC_Immediately;
+		req_.ForceCloseReason = THOST_FTDC_FCC_NotForceClose;
+		req_.IsAutoSuspend = 0;
+		req_.UserForceClose = 0;
+
+		int ret_ = ptda->ReqOrderInsert(&req_, get_request_id());
+		info("TD 发送平仓交易请求: ");
+		info((ret_ == 0) ? "成功" : "失败");
 	}
 	void checkPosition() {
 		info(__FUNCTION__);
@@ -563,6 +631,7 @@ void TD::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRs
 };
 
 void TD::OnRspQrySettlementInfo(CThostFtdcSettlementInfoField *pSettlementInfo, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	pC->info(__FUNCTION__);
 };
 
 //	初始化链条
@@ -573,6 +642,7 @@ void TD::OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettl
 };
 
 void TD::OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+	pC->info(__FUNCTION__);
 };
 //	初始化链条
 void TD::OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAccount, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
