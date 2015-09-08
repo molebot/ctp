@@ -145,9 +145,11 @@ private:
 	double		price_bid;
 	time_t			timer;
 	bool			is_initing;
+	HANDLE		hEvent;
 
 public:
 	Carbon(std::string server_) {
+		hEvent = CreateEvent(NULL,true,false,NULL);
 		m_context	= zmq_ctx_new();
 		m_socket	= zmq_socket(m_context, ZMQ_REQ);
 		zmq_connect(m_socket, server_.c_str());
@@ -196,14 +198,14 @@ public:
 
 		timer = time(NULL);
 
-		ptda = CThostFtdcTraderApi::CreateFtdcTraderApi(".\\tdflow\\");
+		ptda = CThostFtdcTraderApi::CreateFtdcTraderApi((".\\tdflow"+int2string((long)time(NULL))).data());
 		ptds = new TD(this);
 		ptda->RegisterSpi((CThostFtdcTraderSpi*)ptds);
 		ptda->SubscribePublicTopic(THOST_TERT_QUICK);
 		ptda->SubscribePrivateTopic(THOST_TERT_QUICK);
 		ptda->RegisterFront(td_buf);
 		
-		pmda = CThostFtdcMdApi::CreateFtdcMdApi(".\\mdflow\\");
+		pmda = CThostFtdcMdApi::CreateFtdcMdApi((".\\mdflow" + int2string((long)time(NULL))).data());
 		pmds = new MD(this);
 		pmda->RegisterSpi(pmds);
 		pmda->RegisterFront(md_buf);
@@ -249,8 +251,9 @@ public:
 		return "logged:"+s_;
 	}
 	void info(std::string s_) {
-		console->info(s_);
-		logger->info(s_);
+		std::cout << s_ << std::endl;
+//		console->info(s_);
+//		logger->info(s_);
 	}
 	void debug(std::string s_) {
 		log("debug_" + s_);
@@ -276,6 +279,7 @@ public:
 	void tdOnFrontConnected(){
 		info(__FUNCTION__);
 		tdReqUserLogin();
+		SetEvent(hEvent);
 	}
 	void tdReqUserLogin() {
 		info(__FUNCTION__);
@@ -287,6 +291,7 @@ public:
 		int ret_ = ptda->ReqUserLogin(&req_, get_request_id());
 		info("TD 发送登录请求: ");//  
 		info((ret_ == 0) ? "成功" : "失败");
+		SetEvent(hEvent);
 	}
 
 	void tdOnRspUserLogin(CThostFtdcRspUserLoginField *p) {
@@ -302,6 +307,7 @@ public:
 			info("跳过结算单确认...");
 			tdReqQryTradingAccount();
 		}
+		SetEvent(hEvent);
 	}
 
 	void tdReqSettlementInfoConfirm() {
@@ -324,6 +330,7 @@ public:
 			info("TD 发送结算单确认请求: ");//  
 			info((ret_ == 0) ? "成功" : "失败");
 		}
+		SetEvent(hEvent);
 	}
 
 	void tdOnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *p) {
@@ -333,6 +340,7 @@ public:
 			info("TD 结算单确认成功...");
 		}
 		tdReqQryTradingAccount();
+		SetEvent(hEvent);
 	}
 
 	void tdReqQryTradingAccount() {
@@ -355,6 +363,7 @@ public:
 			info("TD 发送帐户查询请求: ");
 			info((ret_ == 0) ? "成功" : "失败");
 		}
+		SetEvent(hEvent);
 	}
 
 	void tdOnRspQryTradingAccount(CThostFtdcTradingAccountField *p) {
@@ -363,6 +372,7 @@ public:
 		money = p->Available;
 		info("可用资金: "+double2string(money));
 		tdReqQryInvestorPosition();
+		SetEvent(hEvent);
 	}
 
 	void tdReqQryInvestorPosition() {
@@ -386,6 +396,7 @@ public:
 			info("TD 发送持仓查询请求: ");
 			info((ret_ == 0) ? "成功" : "失败");
 		}
+		SetEvent(hEvent);
 	}
 
 	void tdOnRspQryInvestorPosition(CThostFtdcInvestorPositionField *p) {
@@ -403,40 +414,43 @@ public:
 		info("MD 开始初始化...");
 		log("MD_init");
 		pmda->Init();
+		SetEvent(hEvent);
 	}
 
 	void tdOnRspQryOrder(CThostFtdcOrderField *p){
 		info(__FUNCTION__);
-
+		SetEvent(hEvent);
 	}
 	void tdOnRspOrderInsert(CThostFtdcInputOrderField *p){
 		info(__FUNCTION__);
-
+		SetEvent(hEvent);
 	}
 	void tdOnRspOrderAction(CThostFtdcInputOrderActionField *p){
 		info(__FUNCTION__);
-
+		SetEvent(hEvent);
 	}
 	void tdOnRtnOrder(CThostFtdcOrderField *p){
 		info(__FUNCTION__);
 		tdReqQryInvestorPosition();
+		SetEvent(hEvent);
 	}
 	void tdOnRtnTrade(CThostFtdcTradeField *p){
 		info(__FUNCTION__);
-
+		SetEvent(hEvent);
 	}
 	void tdOnRspQryTrade(CThostFtdcTradeField *p){
 		info(__FUNCTION__);
-
+		SetEvent(hEvent);
 	}
 	void tdOnRspQryInvestorPositionDetail(CThostFtdcInvestorPositionDetailField *p){
 		info(__FUNCTION__);
-
+		SetEvent(hEvent);
 	}
 	
 	void mdOnFrontConnected(){
 		info(__FUNCTION__);
 		mdReqUserLogin();
+		SetEvent(hEvent);
 	}
 	void mdReqUserLogin() {
 		info(__FUNCTION__);
@@ -448,12 +462,14 @@ public:
 		int ret_ = pmda->ReqUserLogin(&req_, get_request_id());
 		info("MD 发送登录请求: ");
 		info((ret_ == 0) ? "成功" : "失败");
+		SetEvent(hEvent);
 	}
 
 	void mdOnRspUserLogin(CThostFtdcRspUserLoginField *p) {
 		info(__FUNCTION__);
 		info("MD 登录成功...");
 		mdSubscribeMarketData();
+		SetEvent(hEvent);
 	}
 
 	void mdSubscribeMarketData() {
@@ -466,12 +482,14 @@ public:
 		int ret_ = pmda->SubscribeMarketData(p_inst_id, len_);
 		info("MD 发送订阅行情请求: ");
 		info((ret_ == 0) ? "成功" : "失败");
+		SetEvent(hEvent);
 	}
 
 	void mdOnRspSubMarketData(CThostFtdcSpecificInstrumentField *p) {
 		info(__FUNCTION__);
 		info("MD 订阅行情成功...");
 		is_initing = false;
+		SetEvent(hEvent);
 	}
 
 	void mdOnRtnDepthMarketData(CThostFtdcDepthMarketDataField *p) {
@@ -488,6 +506,7 @@ public:
 			price_bid = p->BidPrice1;
 			checkPosition();
 		}
+		SetEvent(hEvent);
 	}
 	void tdOpenPosition(int in_) {
 		position = position + in_;
@@ -523,6 +542,7 @@ public:
 		int ret_ = ptda->ReqOrderInsert(&req_, get_request_id());
 		info("TD 发送开仓交易请求: ");
 		info((ret_ == 0) ? "成功" : "失败");
+		SetEvent(hEvent);
 	}
 
 	void tdClosePosition(int in_) {
@@ -559,6 +579,7 @@ public:
 		int ret_ = ptda->ReqOrderInsert(&req_, get_request_id());
 		info("TD 发送平仓交易请求: ");
 		info((ret_ == 0) ? "成功" : "失败");
+		SetEvent(hEvent);
 	}
 	void checkPosition() {
 		info(__FUNCTION__);
