@@ -1396,12 +1396,6 @@ typedef char TThostFtdcSystemParamIDType;
 #define THOST_FTDC_TPID_LoginFailMaxNum 'L'
 ///是否强制认证
 #define THOST_FTDC_TPID_IsAuthForce 'A'
-///是否冻结证券持仓
-#define THOST_FTDC_TPID_IsPosiFreeze 'F'
-///是否限仓
-#define THOST_FTDC_TPID_IsPosiLimit 'M'
-///郑商所询价时间间隔
-#define THOST_FTDC_TPID_ForQuoteTimeInterval 'Q'
 
 typedef char TThostFtdcTradeParamIDType;
 

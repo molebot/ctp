@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include <iostream>
 #include <sstream>
+#include <exception>
 #include <time.h>
 #include "zmsg.hpp"
 #include <vector>
@@ -138,7 +139,8 @@ private:
 	int			order_ref;
 	int			front_id;
 	int			session_id;
-	int			position;		//	持仓
+	int			position_long;		//	持仓
+	int			position_short;		//	持仓
 	int			todo;			//	目标持仓
 	double		money;			//	资金
 	double		price_ask;
@@ -197,15 +199,17 @@ public:
 		strcpy(td_buf, td_front.c_str());
 
 		timer = time(NULL);
+		position_long = 0;
+		position_short = 0;
 
-		ptda = CThostFtdcTraderApi::CreateFtdcTraderApi((".\\tdflow"+int2string((long)time(NULL))).data());
+		ptda = CThostFtdcTraderApi::CreateFtdcTraderApi((".\\tdflow" +int2string((long)time(NULL))).data());
 		ptds = new TD(this);
 		ptda->RegisterSpi((CThostFtdcTraderSpi*)ptds);
 		ptda->SubscribePublicTopic(THOST_TERT_QUICK);
 		ptda->SubscribePrivateTopic(THOST_TERT_QUICK);
 		ptda->RegisterFront(td_buf);
 		
-		pmda = CThostFtdcMdApi::CreateFtdcMdApi((".\\mdflow" + int2string((long)time(NULL))).data());
+		pmda = CThostFtdcMdApi::CreateFtdcMdApi((".\\mdflow" +int2string((long)time(NULL))).data());
 		pmds = new MD(this);
 		pmda->RegisterSpi(pmds);
 		pmda->RegisterFront(md_buf);
@@ -403,11 +407,16 @@ public:
 		info(__FUNCTION__);
 		info("TD 持仓查询成功:");
 		if (p) {
-			position = p->TodayPosition;
-			info("今日持仓: " + int2string(position));
+			if (p->PosiDirection == THOST_FTDC_D_Buy) {
+					position_long = p->TodayPosition;
+			}
+			if (p->PosiDirection == THOST_FTDC_D_Sell) {
+					position_short = p->TodayPosition;
+			}
+			info("今日持仓+: " + int2string(position_long));
+			info("今日持仓-: " + int2string(position_short));
 		}
 		else {
-			position = 0;
 			info("今日空仓... ");
 		}
 		info("TD 初始化结束...");
@@ -498,9 +507,9 @@ public:
 		std::string price_str = double2string(price);
 		std::string todo_str = msg(price_str);
 		int todo_ = string2int(todo_str);
-		info(price_str+" => "+todo_str+" [ "+int2string(position)+" ]");
+		info(price_str+" => "+todo_str+" [ "+ int2string(position_long) +" : "+ int2string(position_short) + " ]");
 		todo = todo_;
-		if (todo!=position && time(NULL)-timer>1) {
+		if (todo!=(position_long-position_short) && time(NULL)-timer>1) {
 			timer = time(NULL);
 			price_ask = p->AskPrice1;
 			price_bid = p->BidPrice1;
@@ -509,7 +518,12 @@ public:
 		SetEvent(hEvent);
 	}
 	void tdOpenPosition(int in_) {
-		position = position + in_;
+		if (in_ > 0) {
+			position_long += in_;
+		}
+		else {
+			position_short += -1*in_;
+		}
 		info(__FUNCTION__);
 		CThostFtdcInputOrderField req_;
 		memset(&req_,0,sizeof(req_));
@@ -546,7 +560,12 @@ public:
 	}
 
 	void tdClosePosition(int in_) {
-		position = position - in_;
+		if (in_ > 0) {
+			position_long -= in_;
+		}
+		else {
+			position_short -= -1*in_;
+		}
 		info(__FUNCTION__);
 		CThostFtdcInputOrderField req_;
 		memset(&req_, 0, sizeof(req_));
@@ -583,17 +602,35 @@ public:
 	}
 	void checkPosition() {
 		info(__FUNCTION__);
-		if (todo*position >= 0){
-			if (abs(todo) > abs(position)) {
-				tdOpenPosition(todo-position);
+		if (todo>0){
+			if (todo > position_long) {
+				tdOpenPosition(todo-position_long);
 			}
 			else {
-				tdClosePosition(position-todo);
+				tdClosePosition(position_long-todo);
+			}
+			if (position_short > 0) {
+				tdClosePosition(-1*position_short);
+			}
+		}
+		else if (todo < 0) {
+			if (todo < -1*position_short) {
+				tdOpenPosition(todo + position_short);
+			}
+			else {
+				tdClosePosition(position_short + todo);
+			}
+			if (position_long > 0) {
+				tdClosePosition( position_long );
 			}
 		}
 		else {
-			tdClosePosition(position);
-			tdOpenPosition(todo);
+			if (position_long > 0) {
+				tdClosePosition( position_long );
+			}
+			if (position_short > 0) {
+				tdClosePosition(-1 * position_short);
+			}
 		}
 	}
 };
@@ -747,8 +784,14 @@ int main(int argc,const char* argv[])
 		pC = new Carbon(CoreServer);
 	}
 	pC->info("===================================");
-	pC->init();
-	pC->join();
+	try {
+		pC->init();
+		pC->join();
+	}
+	catch (std::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
     return 0;
 }
 
