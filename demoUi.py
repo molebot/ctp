@@ -355,7 +355,7 @@ class OrderMonitor(QtGui.QTableWidget):
     signal = QtCore.pyqtSignal(type(Event()))
 
     dictLabels = OrderedDict()
-    dictLabels['OrderRef'] = u'报单号'
+#    dictLabels['OrderRef'] = u'报单号'
 #    dictLabels['OrderSysID'] = u'系统编号'
     dictLabels['InstrumentID'] = u'合约代码'
 #    dictLabels['ExchangeInstID'] = u'交易所合约代码'   
@@ -531,7 +531,7 @@ class MarketDataMonitor(QtGui.QTableWidget):
     dictLabels = OrderedDict()
     dictLabels['Name'] = u'合约名称'
     dictLabels['InstrumentID'] = u'合约代码'
-    dictLabels['ExchangeInstID'] = u'交易所代码'
+#    dictLabels['ExchangeInstID'] = u'交易所代码'
 
     dictLabels['BidPrice1'] = u'买一价'
     dictLabels['BidVolume1'] = u'买一量'

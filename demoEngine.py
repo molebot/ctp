@@ -35,6 +35,8 @@ class MainEngine:
         self.position = {}
         self.todayposition = {}
         
+        self.__orders = {}
+        self.__retry = 0
         # 循环查询持仓和账户相关
         self.countGet = 0               # 查询延时计数
         self.lastGet = 'Account'        # 上次查询的性质
@@ -44,10 +46,68 @@ class MainEngine:
         self.dictInstrument = {}        # 字典（保存合约查询数据）
         self.ee.register(EVENT_INSTRUMENT, self.insertInstrument)
         
+        self.ee.register(EVENT_TRADE_DATA, self.get_trade)
+        self.ee.register(EVENT_ORDER_DATA, self.get_order)
         self.ee.register(EVENT_ERROR, self.get_error)
         self.ee.register(EVENT_MARKETDATA_DATA, self.get_data)
         self.ee.register(EVENT_POSITION_DATA, self.get_position)
         
+    def get_order(self,event):
+        _data = event.dict_['data']
+        if _data['OrderStatus'] == '5':
+            self.__retry += 1
+            _saved = self.__orders.pop(int(_data['OrderRef'])) 
+            if self.__retry>5:
+                self.__retry = 0
+                return 0
+            print("Plus...Order")
+            if _saved[6] == defineDict['THOST_FTDC_OF_Open']:
+                _tr = 1
+            elif _saved[6] == defineDict['THOST_FTDC_OF_Close']:
+                _tr = -1
+            else:
+                _tr = 0
+            if _saved[5] == defineDict["THOST_FTDC_D_Buy"]:
+                _kr = 1
+            elif _saved[5] == defineDict["THOST_FTDC_D_Sell"]:
+                _kr = -1
+            else:
+                _kr = 0
+            if _tr*_kr>0:
+                price = float(_saved[2])+0.2
+            else:
+                price = float(_saved[3])-0.2
+            _ref = self.td.sendOrder(_saved[0],_saved[1],price,_saved[3],_saved[4],_saved[5],_saved[6])
+            self.__orders[_ref] = (_saved[0],_saved[1],price,_saved[3],_saved[4],_saved[5],_saved[6])
+    def get_trade(self,event):
+        _data = event.dict_['data']
+        _done = _data['Volume']
+        _saved = self.__orders.pop(int(_data['OrderRef'])) 
+        _goon = _saved[4] - _done
+        if _goon != 0:
+            self.__retry += 1
+            if self.__retry>5:
+                self.__retry = 0
+                return 0
+            print("Plus...Trade")
+            if _saved[6] == defineDict['THOST_FTDC_OF_Open']:
+                _tr = 1
+            elif _saved[6] == defineDict['THOST_FTDC_OF_Close']:
+                _tr = -1
+            else:
+                _tr = 0
+            if _saved[5] == defineDict["THOST_FTDC_D_Buy"]:
+                _kr = 1
+            elif _saved[5] == defineDict["THOST_FTDC_D_Sell"]:
+                _kr = -1
+            else:
+                _kr = 0
+            if _tr*_kr>0:
+                price = float(_saved[2])+0.2
+            else:
+                price = float(_saved[3])-0.2
+            _ref = self.td.sendOrder(_saved[0],_saved[1],price,_saved[3],_goon,_saved[5],_saved[6])
+            self.__orders[_ref] = (_saved[0],_saved[1],price,_saved[3],_goon,_saved[5],_saved[6])
     def set_symbol(self,_s):
         self.symbol = _s
     def set_socket(self,_s):
@@ -56,20 +116,11 @@ class MainEngine:
         _data = event.dict_['data']
         if _data['TodayPosition']:
             self.todayposition[_data['PosiDirection']] = _data['TodayPosition']
-        if _data['Position']:pass
-#            self.position[_data['PosiDirection']] = _data['Position']
+        if _data['Position']:#pass
+            self.position[_data['PosiDirection']] = _data['Position']
         self.havedposi = True
-#    def sendOrder(self, instrumentid, exchangeid, price, pricetype, volume, direction, offset):
-#        """发单"""
-#        req['InstrumentID'] = instrumentid
-#        req['OrderPriceType'] = pricetype
-#        req['LimitPrice'] = price
-#        req['VolumeTotalOriginal'] = volume
-#        req['Direction'] = direction
-#        req['CombOffsetFlag'] = offset
-
     def openPosition(self,tr,volume):
-#        print("OPEN",tr)
+        self.__retry = 0
         offset = defineDict['THOST_FTDC_OF_Open']
         pricetype = defineDict['THOST_FTDC_OPT_LimitPrice']
         if tr>0:
@@ -78,9 +129,10 @@ class MainEngine:
         else:   
             price = self.bid-0.2*2.0
             direction = defineDict["THOST_FTDC_D_Sell"]
-        self.td.sendOrder(self.symbol[0],self.symbol[1],price,pricetype,volume,direction,offset)
+        _ref = self.td.sendOrder(self.symbol[0],self.symbol[1],price,pricetype,volume,direction,offset)
+        self.__orders[_ref] = (self.symbol[0],self.symbol[1],price,pricetype,volume,direction,offset)
     def closePosition(self,tr,volume):
-#        print("CLOSE",tr)
+        self.__retry = 0
         offset = defineDict['THOST_FTDC_OF_Close']
         pricetype = defineDict['THOST_FTDC_OPT_LimitPrice']
         if tr<0:
@@ -89,9 +141,10 @@ class MainEngine:
         else:   
             price = self.bid-0.2*2.0
             direction = defineDict["THOST_FTDC_D_Sell"]
-        self.td.sendOrder(self.symbol[0],self.symbol[1],price,pricetype,volume,direction,offset)
+        _ref = self.td.sendOrder(self.symbol[0],self.symbol[1],price,pricetype,volume,direction,offset)
+        self.__orders[_ref] = (self.symbol[0],self.symbol[1],price,pricetype,volume,direction,offset)
     def closeTodayPosition(self,tr,volume):
-#        print("CLOSETODAY",tr)
+        self.__retry = 0
         offset = defineDict['THOST_FTDC_OF_CloseToday']
         pricetype = defineDict['THOST_FTDC_OPT_LimitPrice']
         if tr<0:
@@ -100,11 +153,14 @@ class MainEngine:
         else:   
             price = self.bid-0.2*2.0
             direction = defineDict["THOST_FTDC_D_Sell"]
-        self.td.sendOrder(self.symbol[0],self.symbol[1],price,pricetype,volume,direction,offset)
+        _ref = self.td.sendOrder(self.symbol[0],self.symbol[1],price,pricetype,volume,direction,offset)
+        self.__orders[_ref] = (self.symbol[0],self.symbol[1],price,pricetype,volume,direction,offset)
     def get_error(self,event):
         _err = event.dict_['ErrorID']
         self.socket.send(bytes("error_%s"%_err))
         _bk = self.socket.recv()
+        print("ERROR",event.dict_)
+        self.__orders = {}
     def get_data(self,event):
         _data = event.dict_['data']
         self.ask = _data['AskPrice1']
@@ -113,8 +169,10 @@ class MainEngine:
         self.socket.send(bytes(str(price)))
         _bk = int(self.socket.recv())
         self.todo = _bk
-#        print time(),_data['UpdateTime'],_data['LastPrice'],_bk,self.position,self.todayposition
-        if self.havedposi:
+#        print '%.0f  %s  =  %d'%(time(),_data['LastPrice'],_bk)
+        if self.__orders:
+            print(self.__orders)
+        elif self.havedposi:
             _long = defineDict["THOST_FTDC_PD_Long"]
             _short = defineDict["THOST_FTDC_PD_Short"]
             if self.todo==0:
@@ -171,6 +229,7 @@ class MainEngine:
                 d_reverse = 1
 
                 do_it(_todo,_pass,_reverse,d_pass,d_reverse)
+                
             if not self.havedposi:
                 self.todayposition = {}
                 self.position = {}
@@ -225,19 +284,15 @@ class MainEngine:
         """循环查询账户和持仓"""
         self.countGet = self.countGet + 1
         
-        # 每5秒发一次查询
-        if self.countGet % 20 == 0:
-            self.getPosition()
-        if self.countGet > 100:
+        # 每1秒发一次查询
+        if self.countGet >= 20:
             self.countGet = 0
-            self.getAccount()
-            '''
             if self.lastGet == 'Account':
                 self.getPosition()
                 self.lastGet = 'Position'
             else:
                 self.lastGet = 'Account'
-            '''
+                self.getAccount()
     #----------------------------------------------------------------------
     def initGet(self, event):
         """在交易服务器登录成功后，开始初始化查询"""

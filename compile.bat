@@ -1,1 +1,2 @@
 python compile.py
+pause

@@ -45,7 +45,7 @@ class DemoMdApi(MdApi):
         
         # 请求编号，由api负责管理
         self.__reqid = 0
-        
+
         # 以下变量用于实现连接和重连后的自动登陆
         self.__userid = ''
         self.__password = ''
@@ -76,6 +76,7 @@ class DemoMdApi(MdApi):
     #----------------------------------------------------------------------  
     def onFrontDisconnected(self, n):
         """服务器断开"""
+        print("MD#onFrontDisconnected")
         event = Event(type_=EVENT_LOG)
         event.dict_['log'] = u'行情服务器连接断开'
         self.__eventEngine.put(event)
@@ -257,6 +258,7 @@ class DemoTdApi(TdApi):
     #----------------------------------------------------------------------
     def onFrontDisconnected(self, n):
         """服务器断开"""
+        print("TD#onFrontDisconnected")
         event = Event(type_=EVENT_LOG)
         event.dict_['log'] = u'交易服务器连接断开'
         self.__eventEngine.put(event)
@@ -275,9 +277,11 @@ class DemoTdApi(TdApi):
     def onRspUserLogin(self, data, error, n, last):
         """登陆回报"""
         event = Event(type_=EVENT_LOG)
-        
         if error['ErrorID'] == 0:
             log = u'交易服务器登陆成功'
+            self.__orderref = int(data['MaxOrderRef'])
+            self.__frontid = data['FrontID']
+            self.__sessionid = data['SessionID']
         else:
             log = u'登陆回报，错误代码：' + unicode(error['ErrorID']) + u',' + u'错误信息：' + error['ErrorMsg'].decode('gbk')
         
@@ -543,6 +547,7 @@ class DemoTdApi(TdApi):
     #----------------------------------------------------------------------
     def onRtnInstrumentStatus(self, data):
         """"""
+#        print('onRtnInstrumentStatus',data)
         pass
     
     #----------------------------------------------------------------------
@@ -760,6 +765,10 @@ class DemoTdApi(TdApi):
         event1.dict_['data'] = data
         self.__eventEngine.put(event1)
         
+        event3 = Event(type_=EVENT_ORDER_DATA)
+        event3.dict_['data'] = data
+        self.__eventEngine.put(event3)
+        
         # 特定合约行情事件
         event2 = Event(type_=(EVENT_ORDER_ORDERREF+data['OrderRef']))
         event2.dict_['data'] = data
@@ -772,6 +781,10 @@ class DemoTdApi(TdApi):
         event1 = Event(type_=EVENT_TRADE)
         event1.dict_['data'] = data
         self.__eventEngine.put(event1)
+        
+        event3 = Event(type_=EVENT_TRADE_DATA)
+        event3.dict_['data'] = data
+        self.__eventEngine.put(event3)
         
         # 特定合约成交事件
         event2 = Event(type_=(EVENT_TRADE_CONTRACT+data['InstrumentID']))
@@ -844,7 +857,6 @@ class DemoTdApi(TdApi):
         """发单"""
         self.__reqid = self.__reqid + 1
         req = {}
-        
         req['InstrumentID'] = instrumentid
         req['OrderPriceType'] = pricetype
         req['LimitPrice'] = price

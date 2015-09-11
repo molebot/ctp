@@ -8,7 +8,7 @@ import logging
 import win32api, win32gui
 ct = win32api.GetConsoleTitle()
 hd = win32gui.FindWindow(0,ct)
-win32gui.ShowWindow(hd,0)
+#win32gui.ShowWindow(hd,0)
 logger = logging.getLogger("log")
 hfile = logging.FileHandler("log.txt")
 logger.addHandler(hfile)
