@@ -371,7 +371,6 @@ class MainEngine:
         """保存合约属性数据"""
         f = shelve.open('setting.vn')
         d = {}
-        print(self.dictInstrument)
         d['dictInstrument'] = self.dictInstrument
         d['date'] = date.today()
         f['instrument'] = d
