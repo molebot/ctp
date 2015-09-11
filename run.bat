@@ -1,2 +1,0 @@
-python demoMain.pyc
-pause
