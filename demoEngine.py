@@ -44,6 +44,7 @@ class MainEngine:
         self.dictInstrument = {}        # 字典（保存合约查询数据）
         self.ee.register(EVENT_INSTRUMENT, self.insertInstrument)
         
+        self.ee.register(EVENT_ERROR, self.get_error)
         self.ee.register(EVENT_MARKETDATA_DATA, self.get_data)
         self.ee.register(EVENT_POSITION_DATA, self.get_position)
         
@@ -68,7 +69,7 @@ class MainEngine:
 #        req['CombOffsetFlag'] = offset
 
     def openPosition(self,tr,volume):
-        print("OPEN",tr)
+#        print("OPEN",tr)
         offset = defineDict['THOST_FTDC_OF_Open']
         pricetype = defineDict['THOST_FTDC_OPT_LimitPrice']
         if tr>0:
@@ -79,7 +80,7 @@ class MainEngine:
             direction = defineDict["THOST_FTDC_D_Sell"]
         self.td.sendOrder(self.symbol[0],self.symbol[1],price,pricetype,volume,direction,offset)
     def closePosition(self,tr,volume):
-        print("CLOSE",tr)
+#        print("CLOSE",tr)
         offset = defineDict['THOST_FTDC_OF_Close']
         pricetype = defineDict['THOST_FTDC_OPT_LimitPrice']
         if tr<0:
@@ -90,7 +91,7 @@ class MainEngine:
             direction = defineDict["THOST_FTDC_D_Sell"]
         self.td.sendOrder(self.symbol[0],self.symbol[1],price,pricetype,volume,direction,offset)
     def closeTodayPosition(self,tr,volume):
-        print("CLOSETODAY",tr)
+#        print("CLOSETODAY",tr)
         offset = defineDict['THOST_FTDC_OF_CloseToday']
         pricetype = defineDict['THOST_FTDC_OPT_LimitPrice']
         if tr<0:
@@ -100,6 +101,10 @@ class MainEngine:
             price = self.bid-0.2*2.0
             direction = defineDict["THOST_FTDC_D_Sell"]
         self.td.sendOrder(self.symbol[0],self.symbol[1],price,pricetype,volume,direction,offset)
+    def get_error(self,event):
+        _err = event.dict_['ErrorID']
+        self.socket.send(bytes("error_%s"%_err))
+        _bk = self.socket.recv()
     def get_data(self,event):
         _data = event.dict_['data']
         self.ask = _data['AskPrice1']
@@ -108,7 +113,7 @@ class MainEngine:
         self.socket.send(bytes(str(price)))
         _bk = int(self.socket.recv())
         self.todo = _bk
-        print time(),_data['UpdateTime'],_data['LastPrice'],_bk,self.position,self.todayposition
+#        print time(),_data['UpdateTime'],_data['LastPrice'],_bk,self.position,self.todayposition
         if self.havedposi:
             _long = defineDict["THOST_FTDC_PD_Long"]
             _short = defineDict["THOST_FTDC_PD_Short"]
@@ -172,7 +177,6 @@ class MainEngine:
     #----------------------------------------------------------------------
     def login(self, userid, password, brokerid, mdAddress, tdAddress):
         """登陆"""
-        self.mdlogin = [mdAddress, userid, password, brokerid]
         self.td.login(tdAddress, userid, password, brokerid)
         self.md.login(mdAddress, userid, password, brokerid)
     
@@ -222,16 +226,18 @@ class MainEngine:
         self.countGet = self.countGet + 1
         
         # 每5秒发一次查询
-        if self.countGet > 20:
-            self.countGet = 0   # 清空计数
-            
+        if self.countGet % 20 == 0:
+            self.getPosition()
+        if self.countGet > 100:
+            self.countGet = 0
+            self.getAccount()
+            '''
             if self.lastGet == 'Account':
                 self.getPosition()
                 self.lastGet = 'Position'
             else:
-                self.getAccount()
                 self.lastGet = 'Account'
-    
+            '''
     #----------------------------------------------------------------------
     def initGet(self, event):
         """在交易服务器登录成功后，开始初始化查询"""

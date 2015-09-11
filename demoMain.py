@@ -4,21 +4,29 @@
 该文件中包含的是交易平台的主函数，
 将底层、中层、上层的功能导入，并运行。
 """
+import logging
+import win32api, win32gui
+ct = win32api.GetConsoleTitle()
+hd = win32gui.FindWindow(0,ct)
+win32gui.ShowWindow(hd,0)
+logger = logging.getLogger("log")
+hfile = logging.FileHandler("log.txt")
+logger.addHandler(hfile)
+
 import ctypes
 import sys
 import zmq
 
 from demoEngine import MainEngine
 from demoUi import *
-
 acc={}
 #----------------------------------------------------------------------
 def main():
     """主程序入口"""
+    args = sys.argv[1:]
+    
     context = zmq.Context()
 
-    #  Socket to talk to server
-    print("Connecting to core_server...")
     socket = context.socket(zmq.REQ)
     socket.connect("tcp://192.168.1.234:9999")
     

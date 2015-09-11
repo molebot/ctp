@@ -1,1 +1,2 @@
-python demoMain.py
+python demoMain.pyc
+pause

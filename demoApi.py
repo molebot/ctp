@@ -94,6 +94,12 @@ class DemoMdApi(MdApi):
         event.dict_['log'] = log
         self.__eventEngine.put(event)
     
+        event1 = Event(type_=EVENT_ERROR)
+        log = u'行情错误回报，错误代码：' + unicode(error['ErrorID']) + u',' + u'错误信息：' + error['ErrorMsg'].decode('gbk')
+        event1.dict_['log'] = log
+        event1.dict_['ErrorID'] = unicode(error['ErrorID'])
+        self.__eventEngine.put(event1)
+    
     #----------------------------------------------------------------------
     def onRspUserLogin(self, data, error, n, last):
         """登陆回报"""
@@ -737,6 +743,11 @@ class DemoTdApi(TdApi):
         event.dict_['log'] = log
         self.__eventEngine.put(event)
     
+        event1 = Event(type_=EVENT_ERROR)
+        log = u'交易错误回报，错误代码：' + unicode(error['ErrorID']) + u',' + u'错误信息：' + error['ErrorMsg'].decode('gbk')
+        event1.dict_['log'] = log
+        event1.dict_['ErrorID'] = unicode(error['ErrorID'])
+        self.__eventEngine.put(event1)
     #----------------------------------------------------------------------
     def onRtnOrder(self, data):
         """报单回报"""
@@ -882,7 +893,7 @@ class DemoTdApi(TdApi):
     def onRspQrySettlementInfo(self, data, error, n, last):
         """查询结算信息回报"""
         if last:
-            print(str(datetime.now()),'td.onRspQrySettlementInfo')
+            #print(str(datetime.now()),'td.onRspQrySettlementInfo')
             event = Event(type_=EVENT_LOG)
             log = u'结算信息查询完成'
             event.dict_['log'] = log

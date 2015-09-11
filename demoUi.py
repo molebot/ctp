@@ -17,6 +17,7 @@ from collections import OrderedDict
 
 import sip
 from PyQt4 import QtCore, QtGui
+#from PyQt4.QtCore import QRect
 
 from eventEngine import *
 
@@ -158,8 +159,8 @@ class TradeMonitor(QtGui.QTableWidget):
 
     dictLabels = OrderedDict()
     dictLabels['InstrumentID'] = u'合约代码'
-    dictLabels['ExchangeInstID'] = u'交易所合约代码'
-    dictLabels['ExchangeID'] = u'交易所'
+#    dictLabels['ExchangeInstID'] = u'交易所合约代码'
+#    dictLabels['ExchangeID'] = u'交易所'
     dictLabels['Direction'] = u'方向'   
     dictLabels['OffsetFlag'] = u'开平'
     dictLabels['TradeID'] = u'成交编号'
@@ -355,9 +356,9 @@ class OrderMonitor(QtGui.QTableWidget):
 
     dictLabels = OrderedDict()
     dictLabels['OrderRef'] = u'报单号'
-    dictLabels['OrderSysID'] = u'系统编号'
+#    dictLabels['OrderSysID'] = u'系统编号'
     dictLabels['InstrumentID'] = u'合约代码'
-    dictLabels['ExchangeInstID'] = u'交易所合约代码'   
+#    dictLabels['ExchangeInstID'] = u'交易所合约代码'   
     dictLabels['Direction'] = u'方向'
     dictLabels['CombOffsetFlag'] = u'开平'
     dictLabels['LimitPrice'] = u'价格'
@@ -530,7 +531,7 @@ class MarketDataMonitor(QtGui.QTableWidget):
     dictLabels = OrderedDict()
     dictLabels['Name'] = u'合约名称'
     dictLabels['InstrumentID'] = u'合约代码'
-    dictLabels['ExchangeInstID'] = u'合约交易所代码'
+    dictLabels['ExchangeInstID'] = u'交易所代码'
 
     dictLabels['BidPrice1'] = u'买一价'
     dictLabels['BidVolume1'] = u'买一量'
@@ -1132,17 +1133,19 @@ class MainWindow(QtGui.QMainWindow):
         righttab.addTab(self.accountM, u'账户')
 
         lefttab = QtGui.QTabWidget()
-        lefttab.addTab(self.orderM, u'报单')
         lefttab.addTab(self.tradeM, u'成交')
+        lefttab.addTab(self.orderM, u'报单')
         lefttab.addTab(self.logM, u'日志')
 
-        self.tradingW.setMaximumWidth(400)
-        tradingVBox = QtGui.QVBoxLayout()
-        tradingVBox.addWidget(self.tradingW)
-        tradingVBox.addStretch()
+#        self.tradingW.setMaximumWidth(400)
+#        tradingVBox = QtGui.QVBoxLayout()
+#        tradingVBox.addWidget(self.tradingW)
+#        tradingVBox.addStretch()
 
         upHBox = QtGui.QHBoxLayout()
-        upHBox.addLayout(tradingVBox)
+#        print(dir(upHBox))
+#        upHBox.setGeometry(QRect(0,0,100,50))
+#        upHBox.addLayout(tradingVBox)
         upHBox.addWidget(self.marketdataM)
 
         downHBox = QtGui.QHBoxLayout()
@@ -1172,7 +1175,7 @@ class MainWindow(QtGui.QMainWindow):
 
         menubar = self.menuBar()
         sysMenu = menubar.addMenu(u'系统')
-        sysMenu.addAction(actionLogin)
+#        sysMenu.addAction(actionLogin)
         sysMenu.addAction(actionExit)
 
         helpMenu = menubar.addMenu(u'帮助')
