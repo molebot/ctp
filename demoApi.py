@@ -433,7 +433,6 @@ class DemoTdApi(TdApi):
         选择先储存在一个本地字典中，全部收集完毕后再推送到队列中
         （由于耗时过长目前使用其他进程读取）
         """
-        print(data)
         if error['ErrorID'] == 0:
             event = Event(type_=EVENT_INSTRUMENT)
             event.dict_['data'] = data

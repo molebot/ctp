@@ -129,8 +129,9 @@ class MainEngine:
         else:   
             price = self.bid-0.2*2.0
             direction = defineDict["THOST_FTDC_D_Sell"]
-        _ref = self.td.sendOrder(self.symbol[0],self.symbol[1],price,pricetype,volume,direction,offset)
-        self.__orders[_ref] = (self.symbol[0],self.symbol[1],price,pricetype,volume,direction,offset)
+        _exchangeid = self.dictInstrument[self.symbol]['ExchangeID']
+        _ref = self.td.sendOrder(self.symbol,_exchangeid,price,pricetype,volume,direction,offset)
+        self.__orders[_ref] = (self.symbol,_exchangeid,price,pricetype,volume,direction,offset)
     def closePosition(self,tr,volume):
         self.__retry = 0
         offset = defineDict['THOST_FTDC_OF_Close']
@@ -141,8 +142,9 @@ class MainEngine:
         else:   
             price = self.bid-0.2*2.0
             direction = defineDict["THOST_FTDC_D_Sell"]
-        _ref = self.td.sendOrder(self.symbol[0],self.symbol[1],price,pricetype,volume,direction,offset)
-        self.__orders[_ref] = (self.symbol[0],self.symbol[1],price,pricetype,volume,direction,offset)
+        _exchangeid = self.dictInstrument[self.symbol]['ExchangeID']
+        _ref = self.td.sendOrder(self.symbol,_exchangeid,price,pricetype,volume,direction,offset)
+        self.__orders[_ref] = (self.symbol,_exchangeid,price,pricetype,volume,direction,offset)
     def closeTodayPosition(self,tr,volume):
         self.__retry = 0
         offset = defineDict['THOST_FTDC_OF_CloseToday']
@@ -153,8 +155,9 @@ class MainEngine:
         else:   
             price = self.bid-0.2*2.0
             direction = defineDict["THOST_FTDC_D_Sell"]
-        _ref = self.td.sendOrder(self.symbol[0],self.symbol[1],price,pricetype,volume,direction,offset)
-        self.__orders[_ref] = (self.symbol[0],self.symbol[1],price,pricetype,volume,direction,offset)
+        _exchangeid = self.dictInstrument[self.symbol]['ExchangeID']
+        _ref = self.td.sendOrder(self.symbol,_exchangeid,price,pricetype,volume,direction,offset)
+        self.__orders[_ref] = (self.symbol,_exchangeid,price,pricetype,volume,direction,offset)
     def get_error(self,event):
         _err = event.dict_['ErrorID']
         self.socket.send(bytes("error_%s"%_err))
@@ -371,7 +374,6 @@ class MainEngine:
         """保存合约属性数据"""
         f = shelve.open('setting.vn')
         d = {}
-        print(self.dictInstrument)
         d['dictInstrument'] = self.dictInstrument
         d['date'] = date.today()
         f['instrument'] = d
