@@ -81,7 +81,6 @@ class DemoMdApi(MdApi):
         event.dict_['log'] = u'行情服务器连接断开'
         self.__eventEngine.put(event)
         
-        self.login(self.__address, self.__userid, self.__password, self.__brokerid)
     #---------------------------------------------------------------------- 
     def onHeartBeatWarning(self, n):
         """心跳报警"""
@@ -185,7 +184,7 @@ class DemoMdApi(MdApi):
         self.__userid = userid
         self.__password = password
         self.__brokerid = brokerid
-        self.__address = address
+        
         # 注册服务器地址
         self.registerFront(address)
         
@@ -263,7 +262,6 @@ class DemoTdApi(TdApi):
         event = Event(type_=EVENT_LOG)
         event.dict_['log'] = u'交易服务器连接断开'
         self.__eventEngine.put(event)
-        self.login(self.__address, self.__userid, self.__password, self.__brokerid)
     
     #----------------------------------------------------------------------
     def onHeartBeatWarning(self, n):
@@ -435,7 +433,6 @@ class DemoTdApi(TdApi):
         选择先储存在一个本地字典中，全部收集完毕后再推送到队列中
         （由于耗时过长目前使用其他进程读取）
         """
-
         if error['ErrorID'] == 0:
             event = Event(type_=EVENT_INSTRUMENT)
             event.dict_['data'] = data
@@ -816,7 +813,6 @@ class DemoTdApi(TdApi):
         self.__userid = userid
         self.__password = password
         self.__brokerid = brokerid
-        self.__address = address
         
         # 数据重传模式设为从开始
         #       QUICK

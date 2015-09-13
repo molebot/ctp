@@ -24,9 +24,7 @@ class MainEngine:
 
     #----------------------------------------------------------------------
     def __init__(self):
-        """Constructor
-        :type self: object
-        """
+        """Constructor"""
         self.ee = EventEngine()         # 创建事件驱动引擎
         
         self.md = DemoMdApi(self.ee)    # 创建API接口
@@ -54,7 +52,6 @@ class MainEngine:
         self.ee.register(EVENT_MARKETDATA_DATA, self.get_data)
         self.ee.register(EVENT_POSITION_DATA, self.get_position)
         
-    def set_app(self,_app):self.app = _app
     def get_order(self,event):
         _data = event.dict_['data']
         if _data['OrderStatus'] == '5':
@@ -132,8 +129,9 @@ class MainEngine:
         else:   
             price = self.bid-0.2*2.0
             direction = defineDict["THOST_FTDC_D_Sell"]
-        _ref = self.td.sendOrder(self.symbol,self.exchangeid,price,pricetype,volume,direction,offset)
-        self.__orders[_ref] = (self.symbol,self.exchangeid,price,pricetype,volume,direction,offset)
+        _exchangeid = self.dictInstrument[self.symbol]['ExchangeID']
+        _ref = self.td.sendOrder(self.symbol,_exchangeid,price,pricetype,volume,direction,offset)
+        self.__orders[_ref] = (self.symbol,_exchangeid,price,pricetype,volume,direction,offset)
     def closePosition(self,tr,volume):
         self.__retry = 0
         offset = defineDict['THOST_FTDC_OF_Close']
@@ -144,8 +142,9 @@ class MainEngine:
         else:   
             price = self.bid-0.2*2.0
             direction = defineDict["THOST_FTDC_D_Sell"]
-        _ref = self.td.sendOrder(self.symbol,self.exchangeid,price,pricetype,volume,direction,offset)
-        self.__orders[_ref] = (self.symbol,self.exchangeid,price,pricetype,volume,direction,offset)
+        _exchangeid = self.dictInstrument[self.symbol]['ExchangeID']
+        _ref = self.td.sendOrder(self.symbol,_exchangeid,price,pricetype,volume,direction,offset)
+        self.__orders[_ref] = (self.symbol,_exchangeid,price,pricetype,volume,direction,offset)
     def closeTodayPosition(self,tr,volume):
         self.__retry = 0
         offset = defineDict['THOST_FTDC_OF_CloseToday']
@@ -156,8 +155,9 @@ class MainEngine:
         else:   
             price = self.bid-0.2*2.0
             direction = defineDict["THOST_FTDC_D_Sell"]
-        _ref = self.td.sendOrder(self.symbol,self.exchangeid,price,pricetype,volume,direction,offset)
-        self.__orders[_ref] = (self.symbol,self.exchangeid,price,pricetype,volume,direction,offset)
+        _exchangeid = self.dictInstrument[self.symbol]['ExchangeID']
+        _ref = self.td.sendOrder(self.symbol,_exchangeid,price,pricetype,volume,direction,offset)
+        self.__orders[_ref] = (self.symbol,_exchangeid,price,pricetype,volume,direction,offset)
     def get_error(self,event):
         _err = event.dict_['ErrorID']
         self.socket.send(bytes("error_%s"%_err))
@@ -326,9 +326,7 @@ class MainEngine:
             self.getInstrument()
             
         f.close()
-#        _exchangeid = self.dictInstrument[self.symbol]['ExchangeID']
-        self.exchangeid = ""#_exchangeid
-        self.subscribe(self.symbol,self.exchangeid)
+        self.subscribe(self.symbol[0],self.symbol[1])
     #----------------------------------------------------------------------
     def insertInstrument(self, event):
         """插入合约对象"""
@@ -348,6 +346,7 @@ class MainEngine:
             self.ee.put(event)            
 
             self.getInvestor()
+            
             # 开始循环查询
             self.ee.register(EVENT_TIMER, self.getAccountPosition)              
         
@@ -379,3 +378,5 @@ class MainEngine:
         d['date'] = date.today()
         f['instrument'] = d
         f.close()
+        
+        raise Exception

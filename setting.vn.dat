@@ -4,7 +4,7 @@ p2
 cdatetime
 date
 p3
-(S'\x07\xdf\t\x0c'
+(S'\x07\xdf\t\r'
 tRp4
 sS'dictInstrument'
 p5
@@ -49680,7 +49680,7 @@ p19814
 sS'UnderlyingInstrID'
 p19815
 S''
-sss.'20140916'
+sss.s.'20140916'
 p19813
 sS'UnderlyingInstrID'
 p19814

@@ -529,7 +529,7 @@ class MarketDataMonitor(QtGui.QTableWidget):
     signal = QtCore.pyqtSignal(type(Event()))
 
     dictLabels = OrderedDict()
-#    dictLabels['Name'] = u'合约名称'
+    dictLabels['Name'] = u'合约名称'
     dictLabels['InstrumentID'] = u'合约代码'
 #    dictLabels['ExchangeInstID'] = u'交易所代码'
 
