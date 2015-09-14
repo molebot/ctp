@@ -79,7 +79,7 @@ class MainEngine:
             if _tr*_kr>0:
                 price = float(_saved[2])+0.2
             else:
-                price = float(_saved[3])-0.2
+                price = float(_saved[2])-0.2
             _ref = self.td.sendOrder(_saved[0],_saved[1],price,_saved[3],_saved[4],_saved[5],_saved[6])
             self.__orders[_ref] = (_saved[0],_saved[1],price,_saved[3],_saved[4],_saved[5],_saved[6])
     def get_trade(self,event):
@@ -108,7 +108,7 @@ class MainEngine:
             if _tr*_kr>0:
                 price = float(_saved[2])+0.2
             else:
-                price = float(_saved[3])-0.2
+                price = float(_saved[2])-0.2
             _ref = self.td.sendOrder(_saved[0],_saved[1],price,_saved[3],_goon,_saved[5],_saved[6])
             self.__orders[_ref] = (_saved[0],_saved[1],price,_saved[3],_goon,_saved[5],_saved[6])
     def set_symbol(self,_s):
@@ -119,8 +119,8 @@ class MainEngine:
         _data = event.dict_['data']
         if _data['TodayPosition']:
             self.todayposition[_data['PosiDirection']] = _data['TodayPosition']
-        if _data['Position']:#pass
-            self.position[_data['PosiDirection']] = _data['Position']
+        if _data['Position']:pass
+#            self.position[_data['PosiDirection']] = _data['Position']
         self.havedposi = True
     def openPosition(self,tr,volume):
         self.__retry = 0
