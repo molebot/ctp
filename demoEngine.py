@@ -84,9 +84,13 @@ class MainEngine:
             self.__orders[_ref] = (_saved[0],_saved[1],price,_saved[3],_saved[4],_saved[5],_saved[6])
     def get_trade(self,event):
         _data = event.dict_['data']
+        print('get_trade',_data['OrderRef'])
         _done = _data['Volume']
-        _saved = self.__orders.pop(int(_data['OrderRef'])) 
-        _goon = _saved[4] - _done
+        if int(_data['OrderRef']) in self.__orders:
+            _saved = self.__orders.pop(int(_data['OrderRef']))
+            _goon = _saved[4] - _done
+        else:
+            _goon = 0
         if _goon != 0:
             self.__retry += 1
             if self.__retry>5:
@@ -122,6 +126,7 @@ class MainEngine:
         if _data['Position']:pass
 #            self.position[_data['PosiDirection']] = _data['Position']
         self.havedposi = True
+        self.__orders = {}
     def openPosition(self,tr,volume):
         self.__retry = 0
         offset = defineDict['THOST_FTDC_OF_Open']
