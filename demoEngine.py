@@ -59,7 +59,11 @@ class MainEngine:
         _data = event.dict_['data']
         if _data['OrderStatus'] == '5':
             self.__retry += 1
-            _saved = self.__orders.pop(int(_data['OrderRef'])) 
+            if int(_data['OrderRef']) in self.__orders:
+                _saved = self.__orders.pop(int(_data['OrderRef']))
+            else:
+                self.__orders = {}
+                return 0
             if self.__retry>5:
                 self.__retry = 0
                 return 0

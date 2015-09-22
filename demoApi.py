@@ -76,7 +76,7 @@ class DemoMdApi(MdApi):
     #----------------------------------------------------------------------  
     def onFrontDisconnected(self, n):
         """服务器断开"""
-        print("MD#onFrontDisconnected")
+        raise Exception("MD#onFrontDisconnected")
         event = Event(type_=EVENT_LOG)
         event.dict_['log'] = u'行情服务器连接断开'
         self.__eventEngine.put(event)
@@ -259,10 +259,11 @@ class DemoTdApi(TdApi):
     #----------------------------------------------------------------------
     def onFrontDisconnected(self, n):
         """服务器断开"""
-        print("TD#onFrontDisconnected")
+        raise Exception("TD#onFrontDisconnected")
         event = Event(type_=EVENT_LOG)
         event.dict_['log'] = u'交易服务器连接断开'
         self.__eventEngine.put(event)
+
         self.login(self.__address, self.__userid, self.__password, self.__brokerid)
     
     #----------------------------------------------------------------------
