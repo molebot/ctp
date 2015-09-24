@@ -16,9 +16,12 @@ logger.addHandler(hfile)
 import ctypes
 import sys
 import zmq
+from datetime import datetime
+from time import sleep
 
 from demoEngine import MainEngine
 from demoUi import *
+
 acc={}
 #----------------------------------------------------------------------
 def main():
@@ -64,8 +67,25 @@ def main():
     
     sys.exit(app.exec_())
 
+def isTrade(_d):
+    if _d.hour==9 and _d.minute>=15:
+        return True
+    elif _d.hour==15 and _d.minute<15:
+        return True
+    elif _d.hour==11 and _d.minute<30:
+        return True
+    elif _d.hour in [10,13,14]:
+        return True
+    else:
+        return False
 
 if __name__ == '__main__':
+    _now = datetime.now()
+    while not isTrade(_now):
+        sleep(1)
+        print(_now)
+        _now = datetime.now()
+
     while 1:
         try:
             main()
